@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Squeek Guild Wars (reference mockup)</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#d3d3dc;--card:#f6f6f9;--line:#e1e1ea;--text:#1b1b22;--muted:#6b6b80;--amber:#d18a00;--blue:#4a63d8;--green:#3f8f5a;--bad:#c0392b;
+--mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;--display:"Barlow Condensed","Arial Narrow",Impact,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;padding:20px;max-width:940px;margin-inline:auto}
+h1{font-family:var(--display);font-size:44px;line-height:.95;margin:0;text-transform:uppercase}
+h1 span{color:var(--blue)}
+.sub{font-size:12px;color:var(--muted);margin:8px 0 14px;text-transform:uppercase;letter-spacing:.08em;line-height:1.5}
+.banner{background:#fff3cd;border:1px solid #e6c870;border-radius:8px;padding:8px 12px;font-size:12px;margin-bottom:14px;line-height:1.5}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{padding:9px 13px;background:#e8e8f0;border:0;border-radius:4px;font:inherit;font-size:12px;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;color:var(--text)}
+.tab.on{background:var(--blue);color:#fff}
+.card{background:var(--card) radial-gradient(#dcdce5 1px,transparent 1.2px) 0 0/12px 12px;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.label{display:flex;align-items:center;gap:10px;font-size:12px;text-transform:uppercase;letter-spacing:.16em}
+.label::before{content:"";width:12px;height:12px;background:var(--green);flex:none}
+.label.nodot::before{display:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+.plain{font-size:13px;line-height:1.6;color:#33333f;margin:8px 0 0}
+.btn{display:inline-block;margin:10px 6px 0 0;padding:10px 14px;background:var(--amber);color:#fff;border:0;border-radius:4px;font:inherit;font-size:12px;text-transform:uppercase;letter-spacing:.12em;cursor:pointer}
+.btn:hover{background:#b97a00}.btn:disabled{background:#b9b9c8;cursor:not-allowed}
+.btn.alt{background:var(--blue)}.btn.ghost{background:#e8e8f0;color:var(--text)}
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.run{background:#dff3e6;color:var(--green)}.slp{background:#e6e6ef;color:var(--muted)}
+.t-bronze{background:#f0dcc6;color:#8a5a2b}.t-silver{background:#e3e6ee;color:#5a6075}.t-gold{background:#fbeab7;color:#9a6b00}.t-legend{background:#e6dcff;color:#5a38c8}
+.stk{background:#e6dcff;color:#5a38c8}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+td.r,th.r{text-align:right}
+tr.me td{background:#eaf0ff;font-weight:500}
+.bar{height:16px;background:#fff;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:8px 0 4px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#7a8df0);transition:width .4s}
+.row{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.vs{display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:center}
+.vs>div{flex:1}
+.vs b{font-family:var(--display);font-size:28px;text-transform:uppercase;display:block;line-height:1}
+.vs .big{font-family:var(--display);font-size:42px;color:var(--blue);flex:0 0 auto}
+.log{font-size:12px;line-height:1.7;max-height:96px;overflow:auto;margin-top:8px}
+code{background:#fff;border:1px solid var(--line);padding:1px 5px;font-size:12px}
+input[type=text]{padding:8px;border:1px solid var(--line);border-radius:4px;font:inherit;width:100%;margin-top:6px}
+.sec{display:none}.sec.on{display:block}
+.gname{display:inline-flex;align-items:center;gap:6px}
+.tug{position:relative;height:150px;margin:10px 0 4px;overflow:hidden}
+.ground{position:absolute;left:0;right:0;bottom:10px;height:4px;background:#c9c9d6;border-radius:2px}
+.mid{position:absolute;left:50%;bottom:6px;width:2px;height:60px;background:#b0b0c4}
+.rope{position:absolute;left:6%;right:6%;bottom:62px;height:6px;background:repeating-linear-gradient(90deg,#b8863b 0 8px,#9a6f2a 8px 12px);border-radius:3px}
+.flag{position:absolute;bottom:62px;font-size:26px;transform:translateX(-50%);transition:left .7s cubic-bezier(.3,1.4,.5,1)}
+.hamL,.hamR{position:absolute;bottom:12px;transition:left .7s cubic-bezier(.3,1.4,.5,1)}
+.pull{animation:pull .35s ease-in-out 3}
+.hamR.pull{animation-name:pullR}
+@keyframes pull{50%{transform:translateX(-6px) rotate(-6deg)}}
+@keyframes pullR{50%{transform:translateX(6px) rotate(6deg)}}
+@media(prefers-reduced-motion:reduce){.pull{animation:none}.flag,.hamL,.hamR,.bar>i{transition:none}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{background:#fff;border:1px solid var(--line);border-radius:99px;padding:2px 9px;font-size:11px}
+.chip.lock{opacity:.45}
+.prof{display:flex;gap:10px;align-items:flex-start;border-top:1px solid var(--line);padding:10px 0}
+.prof:first-of-type{border-top:0}
+.calc{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:12px;line-height:1.8}
+.tro{display:flex;gap:12px;flex-wrap:wrap}
+.tro figure{margin:0;text-align:center;font-size:11px;color:var(--muted)}
+.sw{display:flex;gap:8px;align-items:center;font-size:12px;margin-top:8px}
+.cardprev{margin-top:10px;max-width:100%}
+footer{margin-top:18px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#55556a;line-height:1.8}
+</style>
+</head>
+<body>
+<h1>Squeek Guild <span>wars</span></h1>
+<div class="sub">Unofficial community project · Sepolia testnet · no tokens, no payouts</div>
+<div class="banner">REFERENCE MOCKUP for the build: every name and number is fake, every button only simulates, nothing is signed or sent. Layout, wording and rules are what the final site should follow.</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab on" data-t="rank">Rankings</button>
+  <button class="tab" data-t="mine">My guild</button>
+  <button class="tab" data-t="war">War</button>
+  <button class="tab" data-t="recruit">Recruiting</button>
+  <button class="tab" data-t="trophy">Trophies</button>
+  <button class="tab" data-t="join">Create / Join</button>
+  <button class="tab" data-t="how">Rules</button>
+</div>
+
+<!-- RANKINGS -->
+<div class="sec on" id="rank">
+  <div class="card">
+    <div class="label">Season 12 · guild leaderboard</div>
+    <table id="rtable">
+      <tr><th>#</th><th>Guild</th><th>Tier</th><th class="r">Members</th><th class="r">Score / member</th></tr>
+      <tr><td>1</td><td data-g="Wheel Wardens">Wheel Wardens</td><td><span class="pill t-legend">Legend</span></td><td class="r">20/20</td><td class="r">412</td></tr>
+      <tr><td>2</td><td data-g="Seed Syndicate">Seed Syndicate</td><td><span class="pill t-gold">Gold</span></td><td class="r">18/20</td><td class="r">388</td></tr>
+      <tr><td>3</td><td data-g="Cheek Cartel">Cheek Cartel</td><td><span class="pill t-gold">Gold</span></td><td class="r">20/20</td><td class="r">361</td></tr>
+      <tr class="me"><td>4</td><td data-g="Midnight Runners">Midnight Runners (yours)</td><td><span class="pill t-silver">Silver</span></td><td class="r">9/20</td><td class="r">344</td></tr>
+      <tr><td>5</td><td data-g="Nap Nation">Nap Nation</td><td><span class="pill t-silver">Silver</span></td><td class="r">14/20</td><td class="r">301</td></tr>
+      <tr><td>6</td><td data-g="Pixel Paws">Pixel Paws</td><td><span class="pill t-bronze">Bronze</span></td><td class="r">6/20</td><td class="r">240</td></tr>
+    </table>
+    <p class="plain">Ranked by the <b>average</b> of members' points, so a small guild can beat a big one. Season ends Monday 00:00 UTC (<span id="cd">2d 11h</span>). Empty state in the real app: "No guild yet. Be the first to create one."</p>
+  </div>
+</div>
+
+<!-- MY GUILD -->
+<div class="sec" id="mine">
+  <div class="grid">
+    <div class="card">
+      <div class="label nodot"><span id="myham"></span>&nbsp;Midnight Runners</div>
+      <p class="plain"><span class="pill t-silver">Silver</span> · 9/20 members · Captain <code>0x0c0e…8f22</code></p>
+      <div class="bar"><i id="tierBar" style="width:64%"></i></div>
+      <div class="row"><span id="tierTxt">Silver → Gold: 1,920 / 3,000 tier pts</span><span>Season 12</span></div>
+
+      <div class="label" style="margin-top:14px">Daily check-in</div>
+      <p class="plain">Hamster now: <span class="pill run">running · 31 rpm</span> (display only; scoring reads the chain).</p>
+      <div class="calc" id="calc"></div>
+      <div class="sw"><label><input type="checkbox" id="swRound" checked> Demo: a round was settled since my last check-in</label></div>
+      <div class="sw"><label><input type="checkbox" id="swStake" checked> Demo: my wallet is above the staker threshold</label></div>
+      <button class="btn" id="checkin" type="button">Check in today</button>
+      <div class="log" id="log">Wallet connected (demo). One check-in per wallet per UTC day.</div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="label">Members</div>
+        <table>
+          <tr><th>Wallet</th><th></th><th class="r">Streak</th><th class="r">Pts</th></tr>
+          <tr class="me"><td>0x0c0e…8f22 (you)</td><td></td><td class="r" id="myStreak">3d</td><td class="r" id="myPts">18</td></tr>
+          <tr><td>0x91ab…c3d2</td><td><span class="pill stk">Staker</span></td><td class="r">12d</td><td class="r">196</td></tr>
+          <tr><td>0x77f0…19ae</td><td><span class="pill stk">Staker</span></td><td class="r">6d</td><td class="r">141</td></tr>
+          <tr><td>0x4c2d…88b1</td><td></td><td class="r">7d</td><td class="r">94</td></tr>
+        </table>
+        <p class="plain">Captain tools: recruiting open/closed · remove member · hand over captain. Inactive 14 days = removed.</p>
+        <button class="btn ghost" type="button">Recruiting: open</button>
+      </div>
+
+      <div class="card">
+        <div class="label">Checkpoint mission (bonus)</div>
+        <p class="plain">SqueekMining says: round <b>269</b> is settled and the core is not paused. The first member to call <code>checkpoint()</code> earns the guild <b>+100 tier points</b> (max twice a day per guild).</p>
+        <button class="btn alt" id="cpSim" type="button">1 · Free check (read-only)</button>
+        <button class="btn" id="cpSend" type="button" disabled>2 · Send checkpoint()</button>
+        <p class="plain" id="cpOut"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WAR -->
+<div class="sec" id="war">
+  <div class="card">
+    <div class="label">Week 12 · Silver bracket</div>
+    <div class="vs">
+      <div><b>Midnight Runners</b><span class="plain" id="sa">344 / member</span></div>
+      <div class="big">VS</div>
+      <div><b>Nap Nation</b><span class="plain" id="sb">301 / member</span></div>
+    </div>
+    <div class="tug" id="tug">
+      <div class="ground"></div><div class="rope"></div><div class="mid"></div>
+      <div class="flag" id="flag">🚩</div>
+      <div class="hamL" id="hamL"></div><div class="hamR" id="hamR"></div>
+    </div>
+    <div class="row"><span id="lead">Midnight Runners lead by 14%</span><span>Ends in 2d 11h</span></div>
+    <button class="btn" id="pa" type="button">Demo: Midnight Runners member checks in</button>
+    <button class="btn alt" id="pb" type="button">Demo: Nap Nation member checks in</button>
+    <button class="btn ghost" id="share" type="button">Create share card</button>
+    <div id="cardOut"></div>
+    <p class="plain">The flag follows the current per-member score gap. Winner +300 tier points, loser +0 (nobody ever loses tier points), tie +150 each, no opponent = bye +150. In the real app the pull animation plays when a check-in event is seen on the 30-second refresh.</p>
+  </div>
+  <div class="card">
+    <div class="label">Recent wars</div>
+    <p class="plain">W11 beat Pixel Paws (+300) · W10 lost to Seed Syndicate (+0) · W9 beat Cheek Cartel (+300)</p>
+  </div>
+</div>
+
+<!-- RECRUITING -->
+<div class="sec" id="recruit">
+  <div class="grid">
+    <div class="card">
+      <div class="label">Guilds with open seats</div>
+      <div id="open"></div>
+      <p class="plain">Joining needs the guild's invite code from its captain. The app never contacts anyone.</p>
+    </div>
+    <div class="card">
+      <div class="label">Wallets looking for a guild</div>
+      <div id="lfg"></div>
+      <div class="sw"><label><input type="checkbox" id="lfgToggle"> I am looking for a guild (public, you can switch it off any time)</label></div>
+      <p class="plain">Profile cards show only public on-chain facts: days active, streak, staker yes/no, titles.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TROPHIES -->
+<div class="sec" id="trophy">
+  <div class="card">
+    <div class="label">Trophy room</div>
+    <div class="tro" id="tro"></div>
+    <p class="plain">Trophies are drawn in the browser from on-chain results. They are not tokens and not transferable.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="label">Guild emblems</div>
+      <p class="plain">Unlocked per tier. Captains pick one.</p>
+      <div class="chips"><span class="chip">🐹 Hamster (Bronze)</span><span class="chip">🛞 Wheel (Silver)</span><span class="chip lock">🧀 Cheese (Gold)</span><span class="chip lock">👑 Crown (Legend)</span></div>
+    </div>
+    <div class="card">
+      <div class="label">My titles</div>
+      <div class="chips"><span class="chip">7-day streak</span><span class="chip lock">30-day streak</span><span class="chip lock">100-day streak</span><span class="chip lock">Checkpoint Hero</span><span class="chip lock">Captain (8+ members)</span></div>
+      <p class="plain">Titles come from on-chain history and need no SQK.</p>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN -->
+<div class="sec" id="join">
+  <div class="grid">
+    <div class="card">
+      <div class="label">Create a guild</div>
+      <input type="text" placeholder="Guild name (max 24, letters, digits, space, hyphen)" maxlength="24" id="newName">
+      <div class="sw">Preview hamster: <span id="prevHam"></span></div>
+      <p class="plain">Free. You become Captain, choose 5 to 20 seats, and get an invite code.</p>
+      <button class="btn" type="button" id="mk">Create (demo)</button>
+      <p class="plain" id="mkOut"></p>
+    </div>
+    <div class="card">
+      <div class="label">Join with an invite code</div>
+      <input type="text" placeholder="Invite code e.g. MR-7K4Q">
+      <p class="plain">One guild per wallet. After leaving, a 24 h cool-down applies before joining another guild.</p>
+      <button class="btn alt" type="button" id="jn">Join (demo)</button>
+      <p class="plain" id="jnOut"></p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label">Optional: tip the creator</div>
+    <p class="plain">Voluntary and unrelated to the game. You choose the amount and sign it yourself. Creator wallet: <code>0x…full address in clear text…</code></p>
+    <button class="btn ghost" type="button" id="tip">Send tip (demo)</button> <span class="plain" id="tipOut"></span>
+  </div>
+</div>
+
+<!-- RULES -->
+<div class="sec" id="how">
+  <div class="card">
+    <div class="label">How scoring works</div>
+    <p class="plain"><b>Guild score = average of members' season points.</b></p>
+    <p class="plain"><b>Check-in = 10 base points</b> (one per wallet per UTC day).<br>
+    <b>× 2</b> if a SqueekMining round was settled since your last check-in (read on chain).<br>
+    <b>× 1.25</b> if your wallet is above the staker threshold at check-in (fixed bonus, not by amount).<br>
+    Max 25 points per check-in.</p>
+    <p class="plain"><b>Why it holds up:</b> averages punish empty wallets · max 20 seats · one check-in per day · 24 h leave cool-down · 14-day inactivity removal. Many wallets can still be created, but points have no monetary value.</p>
+  </div>
+  <div class="card">
+    <div class="label">What lives on chain</div>
+    <p class="plain">One small registry contract: guilds, members, check-in days. It never holds SQK, ETH or NFTs. Staked power and rounds are only read from the official Squeekchain contracts.</p>
+  </div>
+</div>
+
+<footer>Unofficial community project; no tokens, no payouts. The final site reads only official Squeekchain contracts and never asks for a key or a seed phrase.</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+function hash(s) { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+const FUR = [["#e8b27a", "#fff1dc"], ["#c98a4b", "#f6dcc0"], ["#d9d9e2", "#ffffff"], ["#f0c36a", "#fff6da"], ["#9a7a64", "#e9d6c8"], ["#e59a86", "#ffe6df"]];
+function ham(seed, size = 64, flip = false) {
+  const h = hash(seed), f = FUR[h % FUR.length], acc = (h >> 4) % 5, eye = (h >> 8) % 3;
+  const accs = ["",
+    '<rect x="10" y="22" width="44" height="6" rx="3" fill="#c0392b"/>',
+    '<path d="M24 22 L32 2 L40 22 Z" fill="#4a63d8"/><circle cx="32" cy="3" r="3" fill="#d18a00"/>',
+    '<path d="M12 46 Q32 66 52 46 L48 42 Q32 54 16 42 Z" fill="#3f8f5a"/>',
+    '<path d="M18 22 L20 8 L26 16 L32 6 L38 16 L44 8 L46 22 Z" fill="#d18a00"/>'];
+  const eyes = eye === 0 ? '<circle cx="24" cy="34" r="2.6" fill="#1b1b22"/><circle cx="40" cy="34" r="2.6" fill="#1b1b22"/>'
+    : eye === 1 ? '<path d="M21 34 Q24 30 27 34M37 34 Q40 30 43 34" stroke="#1b1b22" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
+    : '<circle cx="24" cy="34" r="3.4" fill="#1b1b22"/><circle cx="40" cy="34" r="3.4" fill="#1b1b22"/><circle cx="25" cy="33" r="1" fill="#fff"/><circle cx="41" cy="33" r="1" fill="#fff"/>';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 64 64" role="img" aria-label="Guild hamster" style="${flip ? "transform:scaleX(-1)" : ""}"><circle cx="14" cy="18" r="9" fill="${f[0]}"/><circle cx="14" cy="18" r="5" fill="#f4b6c2"/><circle cx="50" cy="18" r="9" fill="${f[0]}"/><circle cx="50" cy="18" r="5" fill="#f4b6c2"/><ellipse cx="32" cy="38" rx="25" ry="21" fill="${f[0]}"/><ellipse cx="32" cy="44" rx="14" ry="10" fill="${f[1]}"/><ellipse cx="14" cy="44" rx="5" ry="4" fill="#f4b6c2" opacity=".6"/><ellipse cx="50" cy="44" rx="5" ry="4" fill="#f4b6c2" opacity=".6"/>${eyes}<ellipse cx="32" cy="42" rx="3" ry="2.2" fill="#d98a9a"/>${accs[acc]}</svg>`;
+}
+function trophy(label, seed) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="112" viewBox="0 0 96 112" role="img" aria-label="${label}"><path d="M22 10h52v30a26 26 0 0 1-52 0z" fill="#d18a00"/><path d="M22 16H8a14 14 0 0 0 14 22M74 16h14a14 14 0 0 1-14 22" stroke="#d18a00" stroke-width="5" fill="none"/><rect x="40" y="64" width="16" height="16" fill="#b97a00"/><rect x="26" y="80" width="44" height="10" rx="3" fill="#6b6b80"/><g transform="translate(30 14) scale(.58)">${ham(seed, 64).replace(/^<svg[^>]*>|<\/svg>$/g, "")}</g></svg>`;
+}
+document.querySelectorAll("#rtable td[data-g]").forEach((td) => { td.innerHTML = `<span class="gname">${ham(td.dataset.g, 28)}${td.textContent}</span>`; });
+$("myham").innerHTML = ham("Midnight Runners", 34);
+
+// tabs
+document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll(".tab").forEach((x) => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".sec").forEach((s) => s.classList.toggle("on", s.id === b.dataset.t));
+  setTimeout(tug, 0);
+}));
+
+// check-in calculator
+let pts = 18, streak = 3, tierPts = 1920;
+function calcNow() {
+  const r = $("swRound").checked, s = $("swStake").checked;
+  const v = Math.min(25, Math.floor(10 * (r ? 2 : 1) * (s ? 1.25 : 1)));
+  $("calc").innerHTML = `Base 10 ${r ? "× 2 <small>(round settled)</small>" : "× 1 <small>(no round settled)</small>"} ${s ? "× 1.25 <small>(staker)</small>" : "× 1 <small>(not a staker)</small>"} = <b>${v} points</b>`;
+  return v;
+}
+["swRound", "swStake"].forEach((id) => $(id).onchange = calcNow); calcNow();
+$("checkin").onclick = () => {
+  const v = calcNow(); pts += v; streak += 1;
+  $("myPts").textContent = pts; $("myStreak").textContent = streak + "d";
+  $("log").insertAdjacentHTML("afterbegin", `You checked in: <b>+${v} pts</b>. Next check-in after 00:00 UTC.<br>`);
+  $("checkin").disabled = true; $("checkin").textContent = "Done for today";
+};
+$("cpSim").onclick = () => { $("cpOut").textContent = "Read-only simulation passed (demo): about 82k gas, nothing sent."; $("cpSend").disabled = false; };
+$("cpSend").onclick = () => { $("cpOut").textContent = "Demo: your wallet would ask you to confirm checkpoint() on the official SqueekMining contract. Nothing was sent."; $("cpSend").disabled = true; };
+
+// tug of war
+let sa = 344, sb = 301;
+function tug() {
+  const diff = (sa - sb) / (sa + sb), pos = Math.max(14, Math.min(86, 50 + diff * 160));
+  $("flag").style.left = pos + "%";
+  const w = $("tug").clientWidth || 600;
+  $("hamL").style.left = Math.max(0, pos / 100 * w - 118) + "px";
+  $("hamR").style.left = Math.min(w - 74, pos / 100 * w + 40) + "px";
+  const lead = Math.abs(Math.round((sa - sb) / Math.min(sa, sb) * 100));
+  $("lead").textContent = sa === sb ? "Dead heat" : (sa > sb ? "Midnight Runners" : "Nap Nation") + " lead by " + lead + "%";
+  $("sa").textContent = sa + " / member"; $("sb").textContent = sb + " / member";
+}
+$("hamL").innerHTML = ham("Midnight Runners", 74); $("hamR").innerHTML = ham("Nap Nation", 74, true);
+const nudge = (el) => { el.classList.remove("pull"); void el.offsetWidth; el.classList.add("pull"); };
+$("pa").onclick = () => { sa += 12; nudge($("hamL")); tug(); };
+$("pb").onclick = () => { sb += 12; nudge($("hamR")); tug(); };
+window.addEventListener("resize", tug); tug();
+
+// share card (pure client side SVG)
+$("share").onclick = () => {
+  const win = sa >= sb, a = win ? "Midnight Runners" : "Nap Nation", b = win ? "Nap Nation" : "Midnight Runners";
+  const pct = Math.abs(Math.round((sa - sb) / Math.min(sa, sb) * 100));
+  const strip = (s) => ham(s, 120).replace(/^<svg[^>]*>|<\/svg>$/g, "");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="470" viewBox="0 0 900 470"><rect width="900" height="470" fill="#d3d3dc"/><rect x="20" y="20" width="860" height="430" rx="18" fill="#f6f6f9" stroke="#e1e1ea"/><text x="450" y="80" text-anchor="middle" font-family="Arial Narrow,Impact,sans-serif" font-size="40" font-weight="700" fill="#1b1b22">SQUEEK GUILD WARS · WEEK 12</text><g transform="translate(130 120) scale(1.9)">${strip(a)}</g><g transform="translate(550 120) scale(1.9)">${strip(b)}</g><text x="450" y="260" text-anchor="middle" font-family="Arial Narrow,Impact,sans-serif" font-size="58" fill="#4a63d8">VS</text><text x="450" y="370" text-anchor="middle" font-family="monospace" font-size="26" fill="#1b1b22">${a} beat ${b} by ${pct}%</text><text x="450" y="415" text-anchor="middle" font-family="monospace" font-size="16" fill="#6b6b80">Unofficial community project · Sepolia testnet</text></svg>`;
+  const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+  $("cardOut").innerHTML = `<img class="cardprev" src="${url}" alt="War result card"><br><a class="btn ghost" style="text-decoration:none;display:inline-block" href="${url}" download="guild-war-week-12.svg">Download card</a>`;
+};
+
+// recruiting
+const OPEN = [["Pixel Paws", "6/20", "Bronze"], ["Nap Nation", "14/20", "Silver"], ["Seed Syndicate", "18/20", "Gold"]];
+$("open").innerHTML = OPEN.map(([n, m, t]) => `<div class="prof">${ham(n, 40)}<div><b>${n}</b> <span class="pill t-${t.toLowerCase()}">${t}</span><br>${m} seats taken <button class="btn ghost" style="margin:6px 0 0" type="button" onclick="this.textContent='Ask the captain for the code'">Request code</button></div></div>`).join("");
+const LFG = [["0x5a21…ce90", "41 days", "18d", true, "30-day streak"], ["0x9c07…1b3e", "23 days", "9d", false, "7-day streak"], ["0xe3d4…77aa", "58 days", "31d", true, "30-day streak · Checkpoint Hero"]];
+$("lfg").innerHTML = LFG.map(([w, d, s, st, ti]) => `<div class="prof"><div><b>${w}</b> ${st ? '<span class="pill stk">Staker</span>' : ""}<br>${d} active · streak ${s}<br><small>${ti}</small></div></div>`).join("");
+$("lfgToggle").onchange = (e) => { if (e.target.checked) $("lfg").insertAdjacentHTML("afterbegin", `<div class="prof" id="meLfg"><div><b>0x0c0e…8f22 (you)</b><br>3 days active · streak 3d</div></div>`); else { const m = $("meLfg"); if (m) m.remove(); } };
+
+// trophies
+$("tro").innerHTML = [["Season 11 · Midnight Runners · 3rd", "Midnight Runners"], ["Season 10 · Wheel Wardens · 1st", "Wheel Wardens"], ["Season 9 · Wheel Wardens · 1st", "Wheel Wardens"]]
+  .map(([l, s]) => `<figure>${trophy(l, s)}<br>${l}</figure>`).join("");
+
+// create / join / tip
+$("newName").addEventListener("input", (e) => { $("prevHam").innerHTML = e.target.value ? ham(e.target.value, 56) : ""; });
+$("mk").onclick = () => { $("mkOut").textContent = "Demo: your wallet would ask you to sign createGuild(name, seats). Nothing was sent."; };
+$("jn").onclick = () => { $("jnOut").textContent = "Demo: your wallet would ask you to sign join(guildId, code). Nothing was sent."; };
+$("tip").onclick = () => { $("tipOut").textContent = "Demo only: nothing was sent."; };
+</script>
+</body>
+</html>
