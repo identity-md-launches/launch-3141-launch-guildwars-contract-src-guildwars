@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-11-08T11:18:51.026Z",
+  "passed": true,
+  "limitBytes": 8388608,
+  "totalSubmissionBytes": 2042149,
+  "remainingBytes": 6346459,
+  "fileCount": 79,
+  "modifiedExistingFiles": [
+    "README.md"
+  ],
+  "newTopLevelPaths": [
+    "DESIGN.md",
+    "VALIDATION.md",
+    "web/",
+    "dist/"
+  ],
+  "productionExportBytes": 933766,
+  "productionFileCount": 17,
+  "relativeAssetsChecked": [
+    "dist/favicon.svg",
+    "dist/assets/index-i2nwlaWI.js",
+    "dist/assets/index-BRXFELoB.css",
+    "dist/assets/barlow-condensed-latin-600-normal-DepVgxBB.woff2",
+    "dist/assets/ibm-plex-mono-latin-400-normal-DMJ8VG8y.woff2",
+    "dist/assets/ibm-plex-mono-latin-600-normal-BgSNZQsw.woff2"
+  ],
+  "socialImage": {
+    "width": 1200,
+    "height": 630
+  },
+  "checks": {
+    "allowedPaths": true,
+    "protectedFilesUnchanged": true,
+    "noIgnoreChanges": true,
+    "noDependencyCachesInSubmission": true,
+    "noArchivesOrSourceMaps": true,
+    "noSymlinksOrSubmodules": true,
+    "packageAndLockAgree": true,
+    "metadataAndLocalAssets": true
+  },
+  "counting": "Full contents of new and modified files, including this report; no dependency/cache directories."
+}

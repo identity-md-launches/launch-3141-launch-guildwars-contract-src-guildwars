@@ -1,0 +1,40 @@
+{
+  "name": "squeek-guild-wars-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "verify-contract": "node scripts/verify-contract.mjs",
+    "test:unit": "node --import tsx --test tests/model.test.ts",
+    "test:ui": "node tests/browser.mjs",
+    "test:live": "node tests/live.mjs",
+    "social": "node --import tsx scripts/generate-social.ts"
+  },
+  "dependencies": {
+    "@coinbase/wallet-sdk": "^4.4.0",
+    "@tanstack/react-query": "^5.90.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "viem": "^2.38.0",
+    "wagmi": "3.7.11"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@fontsource/barlow-condensed": "^5.2.0",
+    "@fontsource/doto": "^5.2.0",
+    "@fontsource/ibm-plex-mono": "^5.2.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "playwright": "^1.65.0",
+    "prettier": "^3.9.10",
+    "solc": "0.8.24",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0",
+    "vite": "^7.2.0"
+  }
+}

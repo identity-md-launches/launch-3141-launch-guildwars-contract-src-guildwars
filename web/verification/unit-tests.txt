@@ -1,0 +1,25 @@
+
+> squeek-guild-wars-web@1.0.0 test:unit
+> node --import tsx --test tests/model.test.ts
+
+✔ seasons switch at Monday 00:00 UTC and keep Sunday in the old season (1.616299ms)
+✔ log decoding preserves indexed wallet, guild, bonus flags and streak (7.075763ms)
+✔ replay reconstructs members, removes departed members, and honors latest opt-in (0.638798ms)
+✔ historic rosters freeze at the season boundary and departure removes season points (2.18375ms)
+✔ podiums use only actual WarResult scores, order ties deterministically, and do not invent third place (0.67994ms)
+✔ hamsters are deterministic and expose all required visual variants (21.571578ms)
+✔ invite codes use browser cryptography, have the expected alphabet, and hash into bytes32 (8.168949ms)
+✔ share copy handles percentages, ties, zero scores and XML escaping (1.875798ms)
+✔ streak title thresholds are exact (0.582701ms)
+✔ nearby guild averages remain distinct and a small lead never displays as zero (39.683695ms)
+✔ share-card lines preserve guild names containing the word by (0.684884ms)
+✔ primary write calls encode against the source-derived ABI (2.512849ms)
+✔ errors explain rejection, pending requests, full guilds, codes, daily limits and cooldown (3.358279ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1470.490869

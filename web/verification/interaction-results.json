@@ -1,0 +1,79 @@
+{
+  "browser": "Chromium via Playwright",
+  "results": [
+    {
+      "name": "empty registry is honest; product + create action fit the first 390px screen",
+      "passed": true
+    },
+    {
+      "name": "rankings filters have a clear recovery path",
+      "passed": true
+    },
+    {
+      "name": "create navigation, wallet discovery, keyboard close, focus restoration, and form validation",
+      "passed": true
+    },
+    {
+      "name": "simulation before signing, duplicate-click prevention, friendly rejection, and successful receipt",
+      "passed": true
+    },
+    {
+      "name": "a lagging RPC retries missing-block reads without mixing snapshot blocks",
+      "passed": true
+    },
+    {
+      "name": "populated rankings sort, tier filtering, guild profiles and member data",
+      "passed": true
+    },
+    {
+      "name": "daily check-in preview is exactly simulated; captain tools explain consequences",
+      "passed": true
+    },
+    {
+      "name": "war comparison, past member scores, lead bar, and actual SVG download",
+      "passed": true
+    },
+    {
+      "name": "recruiting board, public profiles, and trophies use indexed events",
+      "passed": true
+    },
+    {
+      "name": "new check-in refresh moves the rope flag and animates a pull; reduced motion stops it",
+      "passed": true
+    },
+    {
+      "name": "eligible past-season war offers a captain a consequence review",
+      "passed": true
+    },
+    {
+      "name": "already checked-in state prevents another request",
+      "passed": true
+    },
+    {
+      "name": "wrong network disables writes and offers Sepolia switching",
+      "passed": true
+    },
+    {
+      "name": "join simulation explains a full guild before sending; opt-in status has a public review",
+      "passed": true
+    },
+    {
+      "name": "phone without an injected provider offers all four wallet links and Coinbase Smart Wallet",
+      "passed": true
+    },
+    {
+      "name": "RPC failure stays distinct from an empty registry and Refresh recovers",
+      "passed": true
+    },
+    {
+      "name": "automated accessibility scan, reduced motion, local assets and console",
+      "passed": true
+    },
+    {
+      "name": "WebKit primary interaction if this host can launch it",
+      "skipped": true,
+      "reason": "WebKit host libraries are unavailable; no WebKit interaction was performed."
+    }
+  ],
+  "errors": []
+}

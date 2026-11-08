@@ -1,0 +1,13 @@
+{
+  "address": "0x4d9c2fa10fb70100d4c2390212b8f8de286a1d30",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "solc": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+  "evmVersion": "cancun",
+  "abiHash": "0xcf3e732f644c698833395dd9527f2b31e6d9a74578c0819db88b2046278bcd86",
+  "pinnedAbiHash": "0xcc93f5639849513738065b2953747ddda5bc0b3e740829e080f4475ca314ad8d",
+  "abiHashMatchesPin": false,
+  "runtimeHash": "0xb36deb856be191f1c2c3cb222c7d580cd0c9831bbb9384e4dfe4511c6f29c7a1",
+  "runtimeBytes": 11238,
+  "result": "exact compiled deployed runtime match; ABI is generated from that same source",
+  "note": "Canonical ABI hash differs from the pin. The exact byte-for-byte runtime match independently verifies the source and its generated interface. No ABI was substituted."
+}
