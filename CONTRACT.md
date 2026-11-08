@@ -5,8 +5,8 @@
 ## Safety properties
 
 - Never holds SQK, ETH or NFTs. No payable function, no `receive`, no `fallback`, no token transfer, no approval.
-- No owner, no admin, no pause, no proxy. All parameters are immutable (`mining`, `staking`, `minStakerPower`).
-- The only external calls are two read-only `staticcall`s (gas capped at 100,000) to the official SqueekMining (`checkpointStatus()`) and SqueekStaking (`accountPower()`, `stakeOf()`). They never revert the caller: a failed, reverting or malformed read only means "no bonus".
+- No owner, no admin, no pause, no proxy. All parameters are immutable (`mining`, `staking`, `minStakerPower`). The constructor only rejects the zero address; it does not require code at the two addresses (the launch rehearses constructors on an empty chain) and never calls another contract. A wrong address simply disables the matching bonus.
+- The only external calls are two read-only `staticcall`s (gas capped at 100,000) to the official SqueekMining (`checkpointStatus()`) and SqueekStaking (`accountPower()`, `stakeOf()`). They never revert the caller: a failed, reverting or malformed read only means "no bonus". The return words are decoded as plain `uint256` so that a non-canonical boolean word cannot make the decode revert.
 - No unbounded loops. The only loop is the guild-name character check (at most 24 characters).
 
 ## Rules as implemented
@@ -29,7 +29,11 @@
 - Captains choose their opponent inside their tier. Two cooperating guilds can trade wins to farm tier points, and a strong guild can pick a weak opponent. Tier points are cosmetic and carry no monetary value.
 - Many wallets can still be created. The average-based score, the seat cap, the daily limit, the leave cool-down and the freshness rule only make that unprofitable, not impossible.
 - `minStakerPower` is a raw value from `accountPower().sqkPower`. Pick it at deploy time with the official unit in mind.
+- The invite code is a shared secret: `join(guildId, code)` publishes it in calldata, so once it has been used anyone holding it can join while recruiting is open and seats remain. Captains close recruiting, rotate the code or kick to deal with this.
+- A war is submitted by one captain and settles the single war of both guilds for that season. The other guild cannot refuse the pairing or pick a different opponent afterwards.
+- The 24 h cool-down applies to `leave()` only. A wallet removed by `kick()` or `removeInactive()` may join or create a guild immediately.
+- The tier snapshot is taken at the guild's first activity of a season. Tier points earned by a `submitWar` for an earlier season after that first activity do not change the snapshot already taken.
 
 ## Tests
 
-15 offline tests (a local chain with mock SqueekMining and SqueekStaking contracts) passed before this was committed: constructor checks, guild creation and joining, recruiting and code rotation, exact check-in points (10, 12, 20, 25), the freshness rule, failing external reads, leaving and the cool-down, kick and captain rules, inactivity removal, wars (eligibility, double settlement, ties, size versus average, tier mismatch), season rollover on Monday and the absence of payable entry points.
+`forge test` runs 38 offline tests in `test/` (a local chain with mock SqueekMining and SqueekStaking contracts): constructor checks on an empty chain with the launch arguments, guild creation and joining, recruiting and code rotation, exact check-in points (10, 12, 20, 25), the freshness rule, failing, reverting, gas-burning and malformed external reads, leaving and the cool-down, kick and captain rules, inactivity removal, wars (eligibility, double settlement, ties, size versus average, tier mismatch), season rollover on Monday, the absence of payable entry points and the known limitations above. The tests use a small self-contained cheatcode harness in `test/utils/` instead of forge-std.

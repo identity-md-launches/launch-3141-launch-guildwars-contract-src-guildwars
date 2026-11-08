@@ -14,7 +14,10 @@ interface ISqueekMining {
 
 interface ISqueekStaking {
     function accountPower(address account) external view returns (uint256 nftPower, uint256 sqkPower);
-    function stakeOf(address account) external view returns (uint256 principal, uint256 freshPrincipal, uint64 freshUntilRound);
+    function stakeOf(address account)
+        external
+        view
+        returns (uint256 principal, uint256 freshPrincipal, uint64 freshUntilRound);
 }
 
 contract GuildWars {
@@ -83,14 +86,30 @@ contract GuildWars {
     event LookingForGuild(address indexed wallet, bool looking);
     /// @dev flags bit0 = round bonus x2, bit1 = staker bonus x1.25
     event CheckedIn(
-        uint256 indexed guildId, address indexed wallet, uint256 season, uint256 points, uint64 nextRound, uint8 flags, uint32 streak
+        uint256 indexed guildId,
+        address indexed wallet,
+        uint256 season,
+        uint256 points,
+        uint64 nextRound,
+        uint8 flags,
+        uint32 streak
     );
-    event WarResult(uint256 indexed season, uint256 indexed guildA, uint256 indexed guildB, uint256 scoreA, uint256 scoreB, uint256 winner);
+    event WarResult(
+        uint256 indexed season,
+        uint256 indexed guildA,
+        uint256 indexed guildB,
+        uint256 scoreA,
+        uint256 scoreB,
+        uint256 winner
+    );
 
     // ---------------------------------------------------------------- constructor
+    /// @dev The constructor only rejects the zero address. It does not require code at either address: the
+    /// launch rehearses constructors on an empty chain where the official proxies do not exist, and the live
+    /// contracts are checked on first use anyway (a codeless or misbehaving target simply means "no bonus").
     constructor(address mining_, address staking_, uint256 minStakerPower_) {
-        require(mining_ != address(0) && mining_.code.length > 0, "bad mining");
-        require(staking_ != address(0) && staking_.code.length > 0, "bad staking");
+        require(mining_ != address(0), "bad mining");
+        require(staking_ != address(0), "bad staking");
         mining = mining_;
         staking = staking_;
         minStakerPower = minStakerPower_;
@@ -238,7 +257,10 @@ contract GuildWars {
     }
 
     /// @dev flags bit0 = round bonus (x2), bit1 = staker bonus (x1.25).
-    function _computePoints(Member storage m, address wallet) internal returns (uint256 points, uint64 nextRound, uint8 flags) {
+    function _computePoints(Member storage m, address wallet)
+        internal
+        returns (uint256 points, uint64 nextRound, uint8 flags)
+    {
         (bool roundOk, uint64 round) = _readRound();
         nextRound = round;
         if (roundOk && m.roundKnown && round > m.lastRound) flags |= 1;
@@ -278,7 +300,10 @@ contract GuildWars {
     function submitWar(uint256 season, uint256 guildA, uint256 guildB) external {
         require(season < currentSeason(), "season not over");
         require(guildA != guildB, "same guild");
-        require(msg.sender == _guilds[guildA].captain || msg.sender == _guilds[guildB].captain, "not a captain of these guilds");
+        require(
+            msg.sender == _guilds[guildA].captain || msg.sender == _guilds[guildB].captain,
+            "not a captain of these guilds"
+        );
         _requireEligible(season, guildA);
         _requireEligible(season, guildB);
         require(guildSeasonTier[guildA][season] == guildSeasonTier[guildB][season], "tier mismatch");
@@ -304,7 +329,10 @@ contract GuildWars {
 
     function _requireEligible(uint256 season, uint256 guildId) internal view {
         // A guild is eligible only if at least one of its members checked in during that season.
-        require(guildSeasonMembers[guildId][season] > 0 && guildSeasonTotal[guildId][season] > 0, "guild inactive that season");
+        require(
+            guildSeasonMembers[guildId][season] > 0 && guildSeasonTotal[guildId][season] > 0,
+            "guild inactive that season"
+        );
         require(!warDone[season][guildId], "already settled");
     }
 
@@ -312,14 +340,36 @@ contract GuildWars {
     function getGuild(uint256 guildId)
         external
         view
-        returns (address captain, string memory name, uint8 seats, bool recruiting, uint16 memberCount, uint32 tierPoints, uint8 tier, uint32 captainActiveDay)
+        returns (
+            address captain,
+            string memory name,
+            uint8 seats,
+            bool recruiting,
+            uint16 memberCount,
+            uint32 tierPoints,
+            uint8 tier,
+            uint32 captainActiveDay
+        )
     {
         Guild storage g = _guilds[guildId];
-        return (g.captain, g.name, g.seats, g.recruiting, g.memberCount, g.tierPoints, tierOf(g.tierPoints), g.captainActiveDay);
+        return (
+            g.captain,
+            g.name,
+            g.seats,
+            g.recruiting,
+            g.memberCount,
+            g.tierPoints,
+            tierOf(g.tierPoints),
+            g.captainActiveDay
+        );
     }
 
     /// @return total season points of the guild, member count recorded for that season and the average scaled by 1e6
-    function seasonScore(uint256 guildId, uint256 season) external view returns (uint256 total, uint16 memberCount, uint256 averageScaled) {
+    function seasonScore(uint256 guildId, uint256 season)
+        external
+        view
+        returns (uint256 total, uint16 memberCount, uint256 averageScaled)
+    {
         total = guildSeasonTotal[guildId][season];
         memberCount = guildSeasonMembers[guildId][season];
         averageScaled = memberCount == 0 ? 0 : (total * SCORE_SCALE) / memberCount;
@@ -361,7 +411,8 @@ contract GuildWars {
         require(b.length >= 1 && b.length <= MAX_NAME_LENGTH, "name length");
         for (uint256 i = 0; i < b.length; i++) {
             bytes1 c = b[i];
-            bool ok = (c >= 0x30 && c <= 0x39) || (c >= 0x41 && c <= 0x5A) || (c >= 0x61 && c <= 0x7A) || c == 0x20 || c == 0x2D;
+            bool ok = (c >= 0x30 && c <= 0x39) || (c >= 0x41 && c <= 0x5A) || (c >= 0x61 && c <= 0x7A) || c == 0x20
+                || c == 0x2D;
             require(ok, "bad character");
         }
     }
@@ -371,7 +422,9 @@ contract GuildWars {
         (bool success, bytes memory ret) =
             mining.staticcall{gas: READ_GAS}(abi.encodeWithSelector(ISqueekMining.checkpointStatus.selector));
         if (!success || ret.length < 96) return (false, 0);
-        (, uint256 n,) = abi.decode(ret, (bool, uint256, bool));
+        // Decode all three words as uint256: decoding a `bool` reverts on any word other than 0/1, which
+        // would turn a malformed read into a revert of every check-in instead of "no bonus".
+        (, uint256 n,) = abi.decode(ret, (uint256, uint256, uint256));
         if (n > type(uint64).max) return (false, 0);
         return (true, uint64(n));
     }

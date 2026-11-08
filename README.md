@@ -36,3 +36,14 @@ The project never asks for a private key or a seed phrase. The contract never ho
 ## Contract
 
 `src/GuildWars.sol` (Solidity 0.8.24, no owner, no proxy, holds nothing). Details, differences from `SPEC.md` and known limitations: `CONTRACT.md`.
+
+Build and test with Foundry (no external dependencies):
+
+```
+forge build
+forge test
+```
+
+## Launch (Sepolia)
+
+The contract is deployed once through the IdentityMD project factory with these constructor arguments, in order: `mining` = SqueekMining proxy, `staking` = SqueekStaking proxy (addresses above), `minStakerPower` = `1000000000000000000` (1 power unit). The changes made for the launch and the audit findings handled are listed in `ADAPTATION.md`.
