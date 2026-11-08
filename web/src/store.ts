@@ -156,7 +156,9 @@ export function refresh(): Promise<void> {
       const blocks = [
         ...new Set(
           events
-            .filter((e) => ["Joined", "Left", "Kicked"].includes(e.name))
+            .filter((e) =>
+              ["GuildCreated", "Joined", "Left", "Kicked"].includes(e.name),
+            )
             .map((e) => e.block),
         ),
       ];

@@ -2,7 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import { CHAIN_ID, EXPLORER, friendlyError, read } from "./chain";
 import { Hamster, downloadSvg, shareCard } from "./art";
-import { Empty, SectionTitle, TierBadge, WalletAddress } from "./components";
+import {
+  Empty,
+  HistoryStatus,
+  SectionTitle,
+  TierBadge,
+  WalletAddress,
+} from "./components";
 import { Icon } from "./icons";
 import {
   historicalMembers,
@@ -82,6 +88,8 @@ export function WarPage() {
   const [downloaded, setDownloaded] = useState(false);
   const [retry, setRetry] = useState(0);
   const guilds = game.guilds;
+  const historyPlaceholder =
+    game.status === "error" ? "History unavailable" : "Reading…";
   const a = guilds.find((g) => String(g.id) === aId) ?? guilds[0];
   const b =
     guilds.find((g) => String(g.id) === bId) ??
@@ -198,7 +206,13 @@ export function WarPage() {
               value={a ? String(a.id) : ""}
               onChange={(e) => setAId(e.target.value)}
             >
-              {!a && <option value="">No guilds yet</option>}
+              {!a && (
+                <option value="">
+                  {game.block === undefined
+                    ? historyPlaceholder
+                    : "No guilds yet"}
+                </option>
+              )}
               {guilds.map((g) => (
                 <option key={String(g.id)} value={String(g.id)}>
                   {g.name} · #{String(g.id)}
@@ -214,7 +228,13 @@ export function WarPage() {
               value={b ? String(b.id) : ""}
               onChange={(e) => setBId(e.target.value)}
             >
-              {!b && <option value="">No opponent yet</option>}
+              {!b && (
+                <option value="">
+                  {game.block === undefined
+                    ? historyPlaceholder
+                    : "No opponent yet"}
+                </option>
+              )}
               {guilds.map((g) => (
                 <option key={String(g.id)} value={String(g.id)}>
                   {g.name} · #{String(g.id)}
@@ -229,7 +249,9 @@ export function WarPage() {
               value={season?.toString() ?? ""}
               onChange={(e) => setSelectedSeason(e.target.value)}
             >
-              {season === undefined && <option value="">Reading…</option>}
+              {season === undefined && (
+                <option value="">{historyPlaceholder}</option>
+              )}
               {seasons.map((s) => (
                 <option key={s} value={s}>
                   {seasonLabel(BigInt(s))}
@@ -239,14 +261,10 @@ export function WarPage() {
             </select>
           </label>
         </div>
-        {!a || !b ? (
-          <Empty
-            title={
-              game.block === undefined
-                ? "Reading the arena…"
-                : "A rivalry needs two guilds."
-            }
-          >
+        {game.block === undefined ? (
+          <HistoryStatus loading="Reading the arena…" />
+        ) : !a || !b ? (
+          <Empty title="A rivalry needs two guilds.">
             Once two guilds exist, compare their season averages here.
           </Empty>
         ) : error ? (
@@ -397,7 +415,9 @@ export function WarPage() {
       <section>
         <SectionTitle>Past results</SectionTitle>
         <div className="card results-list">
-          {game.indexed.wars.length === 0 ? (
+          {game.block === undefined ? (
+            <HistoryStatus />
+          ) : game.indexed.wars.length === 0 ? (
             <Empty title="No settled wars yet." action={false} art={false}>
               Results appear after a captain submits a completed season.
             </Empty>

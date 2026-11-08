@@ -175,6 +175,33 @@ export function Countdown({ season }: { season?: bigint }) {
     </span>
   );
 }
+export function HistoryStatus({
+  loading = "Reading history…",
+}: {
+  loading?: string;
+}) {
+  const game = useGame();
+  const failed = game.status === "error" && !game.refreshing;
+  return (
+    <div className="empty-state">
+      <p className={failed ? "error" : "muted"} role="status">
+        {failed
+          ? "History could not be loaded. Refresh to try again."
+          : loading}
+      </p>
+      {failed && (
+        <button
+          className="secondary"
+          onClick={() => void refresh()}
+          aria-label="Refresh history"
+        >
+          <Icon name="refresh" size={16} />
+          Refresh
+        </button>
+      )}
+    </div>
+  );
+}
 export function ReadStatus() {
   const game = useGame();
   return (

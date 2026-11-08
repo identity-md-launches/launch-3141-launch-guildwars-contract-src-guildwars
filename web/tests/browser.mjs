@@ -7,10 +7,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium, webkit } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
-import { decodeFunctionData, keccak256, toHex } from "viem";
+import { decodeEventLog, decodeFunctionData, keccak256, toHex } from "viem";
 import {
   ABI,
   A,
+  B,
+  C,
   D,
   CONTRACT,
   RPC,
@@ -418,6 +420,99 @@ try {
     },
   );
   await step(
+    "GuildCreated alone includes disconnected captains in live and historical rosters",
+    async () => {
+      const creationLogs = populated.data.logs.filter(
+        (log) =>
+          decodeEventLog({ abi: ABI, ...log }).eventName === "GuildCreated",
+      );
+      assert.equal(creationLogs.length, 2);
+      assert.equal(
+        populated.data.logs.filter((log) => {
+          const decoded = decodeEventLog({ abi: ABI, ...log });
+          return (
+            decoded.eventName === "Joined" &&
+            [A, B].includes(decoded.args.wallet)
+          );
+        }).length,
+        0,
+      );
+      for (const log of creationLogs)
+        assert.ok(
+          populated.data.calls.some(
+            (call) =>
+              call.method === "eth_getBlockByNumber" &&
+              call.params[0] === log.blockNumber,
+          ),
+          "creation blocks must have timestamps for historical filtering",
+        );
+      assert.equal(
+        await populated.page
+          .getByRole("button", { name: "Connect wallet", exact: true })
+          .count(),
+        1,
+      );
+      assert.equal(await populated.page.locator(".member-row").count(), 2);
+      assert.match(
+        await populated.page
+          .locator(".member-row")
+          .filter({ hasText: A })
+          .innerText(),
+        /25\s+pts/,
+      );
+      assert.ok(
+        await populated.page
+          .locator(".member-row")
+          .filter({ hasText: C })
+          .isVisible(),
+      );
+      await populated.page.goto(`${url}#guild/2`);
+      await populated.page
+        .getByRole("heading", { name: "Guild profile" })
+        .waitFor();
+      assert.equal(await populated.page.locator(".member-row").count(), 1);
+      assert.match(
+        await populated.page
+          .locator(".member-row")
+          .filter({ hasText: B })
+          .innerText(),
+        /20\s+pts/,
+      );
+      await populated.page.goto(`${url}#war`);
+      await populated.page.locator(".rope-flag").waitFor();
+      assert.equal(await populated.page.locator(".war-member").count(), 3);
+      for (const wallet of [A, B, C])
+        assert.ok(
+          await populated.page
+            .locator(".war-member")
+            .filter({ hasText: wallet })
+            .isVisible(),
+        );
+      await populated.page
+        .getByRole("combobox", { name: "War season" })
+        .selectOption(String(populated.data.prior));
+      await populated.page
+        .getByText("Settled on Sepolia", { exact: true })
+        .waitFor();
+      assert.equal(await populated.page.locator(".war-member").count(), 3);
+      assert.match(
+        await populated.page
+          .locator(".war-member")
+          .filter({ hasText: A })
+          .innerText(),
+        /114 pts/,
+      );
+      assert.match(
+        await populated.page
+          .locator(".war-member")
+          .filter({ hasText: B })
+          .innerText(),
+        /100 pts/,
+      );
+      await populated.page.goto(`${url}#guild/1`);
+    },
+  );
+  await step(
     "daily check-in preview is exactly simulated; captain tools explain consequences",
     async () => {
       await connect(populated.page);
@@ -806,6 +901,177 @@ try {
           name: "No guild yet. Be the first to create one.",
         })
         .waitFor();
+    },
+  );
+  await step(
+    "history loading and RPC errors do not assert empty wars, trophies, listings or profiles; Refresh recovers",
+    async () => {
+      const context = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        reducedMotion: "reduce",
+      });
+      contexts.push(context);
+      const data = fixture("empty");
+      let unavailable = true;
+      let release;
+      const pending = new Promise((resolve) => {
+        release = resolve;
+      });
+      await context.route(`${RPC}/**`, async (route) => {
+        await pending;
+        const request = route.request().postDataJSON();
+        await route.fulfill({
+          contentType: "application/json",
+          body: JSON.stringify(
+            unavailable
+              ? {
+                  jsonrpc: "2.0",
+                  id: request.id,
+                  error: { code: -32000, message: "RPC unavailable" },
+                }
+              : await data.rpc(request),
+          ),
+        });
+      });
+      const page = await context.newPage();
+      page.on("pageerror", (error) => errors.push(error.message));
+      await page.goto(`${url}#trophies`);
+      await page
+        .getByText("Reading history…", { exact: true })
+        .first()
+        .waitFor();
+      const noFalseClaims = async () => {
+        assert.doesNotMatch(
+          await page.locator("main").innerText(),
+          /No season trophies awarded yet|\d+ recorded achievers|No settled wars yet|No open guilds yet|No wallets on the board yet|Not currently in a guild|No streak titles yet/,
+        );
+      };
+      await noFalseClaims();
+      unavailable = true;
+      release();
+      await page.getByText("Unable to read Sepolia", { exact: true }).waitFor();
+      const failure = "History could not be loaded. Refresh to try again.";
+      for (const route of ["trophies", "war", "recruiting", `profile/${A}`]) {
+        await page.goto(`${url}#${route}`);
+        await page.getByText(failure, { exact: true }).first().waitFor();
+        await noFalseClaims();
+        assert.doesNotMatch(await page.locator("main").innerText(), /Reading/);
+        assert.ok(
+          await page
+            .getByRole("button", { name: "Refresh chain data" })
+            .isEnabled(),
+        );
+        assert.ok(
+          await page
+            .getByRole("button", { name: "Refresh history" })
+            .first()
+            .isEnabled(),
+        );
+        for (const width of [320, 390, 760, 1440])
+          await noOverflow(page, width);
+        await page.setViewportSize({ width: 390, height: 844 });
+        if (route === "trophies") {
+          await page.screenshot({
+            path: path.join(out, "history-error-390.png"),
+            fullPage: true,
+          });
+          const audit = await new AxeBuilder({ page })
+            .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+            .analyze();
+          assert.deepEqual(
+            audit.violations.map((v) => v.id),
+            [],
+          );
+        }
+      }
+      unavailable = false;
+      await page.goto(`${url}#trophies`);
+      await page.getByRole("button", { name: "Refresh history" }).click();
+      await page.getByText(/Sepolia · block/).waitFor();
+      assert.equal(
+        await page.getByText("0 recorded achievers", { exact: true }).count(),
+        3,
+      );
+      assert.match(
+        await page.locator("main").innerText(),
+        /No season trophies awarded yet/,
+      );
+      await page.goto(`${url}#war`);
+      await page
+        .getByRole("heading", { name: "No settled wars yet." })
+        .waitFor();
+      // A later failure must retain the last successful snapshot, not erase known history.
+      unavailable = true;
+      await page.getByRole("button", { name: "Refresh chain data" }).click();
+      await page
+        .getByText("Read interrupted · showing the last snapshot", {
+          exact: true,
+        })
+        .waitFor();
+      assert.ok(
+        await page
+          .getByRole("heading", { name: "No settled wars yet." })
+          .isVisible(),
+      );
+      assert.equal(await page.getByText(failure, { exact: true }).count(), 0);
+      await context.close();
+    },
+  );
+  await step(
+    "Refresh retries an uncached profile after either getter fails at the same block",
+    async () => {
+      const E = "0x5555555555555555555555555555555555555555";
+      for (const failedGetter of ["members", "memberSeasonPoints"]) {
+        const profile = await setup();
+        let failing = true;
+        let reads = 0;
+        await profile.context.route(`${RPC}/**`, async (route) => {
+          const request = route.request().postDataJSON();
+          if (request.method !== "eth_call") return route.fallback();
+          const call = decodeFunctionData({
+            abi: ABI,
+            data: request.params[0].data,
+          });
+          if (
+            !["members", "memberSeasonPoints"].includes(call.functionName) ||
+            call.args[0].toLowerCase() !== E
+          )
+            return route.fallback();
+          reads++;
+          if (!failing || call.functionName !== failedGetter)
+            return route.fallback();
+          await route.fulfill({
+            contentType: "application/json",
+            body: JSON.stringify({
+              jsonrpc: "2.0",
+              id: request.id,
+              error: { code: -32000, message: "HTTP 503" },
+            }),
+          });
+        });
+        await profile.page.goto(`${url}#profile/${E}`);
+        await profile.page.locator(".profile-panel [role=alert]").waitFor();
+        assert.equal(reads, 2);
+        const before = await profile.page
+          .locator(".read-status > span")
+          .last()
+          .innerText();
+        failing = false;
+        await profile.page
+          .getByRole("button", { name: "Refresh chain data" })
+          .click();
+        await profile.page.locator(".profile-stats").waitFor({ timeout: 5000 });
+        assert.equal(reads, 4);
+        assert.equal(
+          await profile.page.locator(".profile-panel [role=alert]").count(),
+          0,
+        );
+        assert.equal(
+          await profile.page.locator(".read-status > span").last().innerText(),
+          before,
+        );
+        await profile.context.close();
+      }
     },
   );
   await step(

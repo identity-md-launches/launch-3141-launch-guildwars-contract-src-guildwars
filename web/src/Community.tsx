@@ -6,6 +6,7 @@ import { Emblem, Trophy } from "./art";
 import {
   Empty,
   GuildName,
+  HistoryStatus,
   MemberBadges,
   SectionTitle,
   TierBadge,
@@ -47,14 +48,22 @@ export function Recruiting() {
         <SectionTitle
           aside={
             <span className="fine muted">
-              {game.block ? `${recruiting.length} open guilds` : "Reading…"}
+              {game.block !== undefined
+                ? `${recruiting.length} open guilds`
+                : game.status === "error"
+                  ? "History unavailable"
+                  : "Reading…"}
             </span>
           }
         >
           Open seats
         </SectionTitle>
         <div className="recruit-grid">
-          {recruiting.length ? (
+          {game.block === undefined ? (
+            <div className="card">
+              <HistoryStatus loading="Reading recruiting guilds…" />
+            </div>
+          ) : recruiting.length ? (
             recruiting.map((guild) => (
               <article className="card recruit-card" key={String(guild.id)}>
                 <GuildName guild={guild} />
@@ -72,13 +81,7 @@ export function Recruiting() {
             ))
           ) : (
             <div className="card">
-              <Empty
-                title={
-                  game.block === undefined
-                    ? "Reading recruiting guilds…"
-                    : "No open guilds yet."
-                }
-              >
+              <Empty title="No open guilds yet.">
                 Create a guild and make room for your crew.
               </Empty>
             </div>
@@ -138,13 +141,11 @@ export function Recruiting() {
           </button>
         </div>
         <div className="card">
-          {looking.length === 0 ? (
+          {game.block === undefined ? (
+            <HistoryStatus loading="Reading public listings…" />
+          ) : looking.length === 0 ? (
             <Empty
-              title={
-                game.block
-                  ? "No wallets on the board yet."
-                  : "Reading public listings…"
-              }
+              title="No wallets on the board yet."
               action={false}
               art={false}
             >
@@ -214,7 +215,11 @@ export function Trophies() {
           events. These are cosmetic community trophies, with no token or
           payout. Equal scores are ordered by guild ID for display.
         </p>
-        {seasons.length ? (
+        {game.block === undefined ? (
+          <div className="card">
+            <HistoryStatus />
+          </div>
+        ) : seasons.length ? (
           seasons.map((s) => (
             <div key={s} className="podium-season">
               <h3>Week of {seasonLabel(BigInt(s))}</h3>
@@ -248,11 +253,7 @@ export function Trophies() {
               <Trophy place={3} />
             </div>
             <Empty
-              title={
-                game.block
-                  ? "The trophy cabinet is waiting."
-                  : "Reading past seasons…"
-              }
+              title="The trophy cabinet is waiting."
               action={false}
               art={false}
             >
@@ -288,8 +289,11 @@ export function Trophies() {
               <h3>{title.title}</h3>
               <p className="muted">{title.text}</p>
               <span className="fine muted">
-                {[...best.values()].filter((n) => n >= title.days).length}{" "}
-                recorded achievers
+                {game.block !== undefined
+                  ? `${[...best.values()].filter((n) => n >= title.days).length} recorded achievers`
+                  : game.status === "error"
+                    ? "History unavailable"
+                    : "Reading history…"}
               </span>
             </div>
           ))}
@@ -341,7 +345,7 @@ export function Profile({ wallet }: { wallet: string }) {
     return () => {
       cancelled = true;
     };
-  }, [wallet, cached, game.season, game.block]);
+  }, [wallet, cached, game.season, game.block, game.updatedAt]);
   const guild = game.guilds.find((g) => g.id === person?.guildId);
   const checkins = game.events.filter(
     (e) =>
@@ -363,7 +367,9 @@ export function Profile({ wallet }: { wallet: string }) {
       ) : (
         <section className="card profile-panel">
           <WalletAddress address={wallet} profile={false} />
-          {error ? (
+          {game.block === undefined ? (
+            <HistoryStatus loading="Reading this wallet’s game activity…" />
+          ) : error ? (
             <p className="error" role="alert">
               {error}
             </p>

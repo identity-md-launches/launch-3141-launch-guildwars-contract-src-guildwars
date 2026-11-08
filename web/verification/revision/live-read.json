@@ -1,0 +1,80 @@
+{
+  "capturedAt": "2026-11-08T11:43:59.698Z",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "contract": "0x4d9c2fa10fb70100d4c2390212b8f8de286a1d30",
+  "browserTransport": "Read-only requests forwarded unchanged through curl for this restricted runner; not part of the site.",
+  "state": {
+    "block": 12090387,
+    "timestamp": 1794138228,
+    "chainId": 11155111,
+    "runtimeHash": "0xb36deb856be191f1c2c3cb222c7d580cd0c9831bbb9384e4dfe4511c6f29c7a1",
+    "guildCount": "0",
+    "minStakerPower": "1000000000000000000",
+    "currentSeason": "2966"
+  },
+  "logs": [
+    {
+      "from": 12089806,
+      "to": 12090387,
+      "count": 0
+    }
+  ],
+  "scriptErrors": [],
+  "failedLocalResources": [],
+  "rpcErrors": [],
+  "emptyStateObserved": true,
+  "firstScreen": {
+    "width": 390,
+    "height": 844,
+    "createButtonTop": 349.40625,
+    "createButtonBottom": 395.40625,
+    "emptyMessageBottom": 839.75,
+    "visible": true
+  },
+  "fonts": [
+    {
+      "family": "Doto",
+      "weight": "900",
+      "status": "loaded"
+    },
+    {
+      "family": "Barlow Condensed",
+      "weight": "600",
+      "status": "loaded"
+    },
+    {
+      "family": "IBM Plex Mono",
+      "weight": "400",
+      "status": "loaded"
+    },
+    {
+      "family": "IBM Plex Mono",
+      "weight": "600",
+      "status": "loaded"
+    }
+  ],
+  "keyboardFocus": {
+    "text": "Connect wallet",
+    "outline": "solid",
+    "outlineWidth": "2px"
+  },
+  "widths": [
+    {
+      "viewport": 320,
+      "content": 320
+    },
+    {
+      "viewport": 390,
+      "content": 390
+    },
+    {
+      "viewport": 760,
+      "content": 760
+    },
+    {
+      "viewport": 1440,
+      "content": 1440
+    }
+  ],
+  "passed": true
+}

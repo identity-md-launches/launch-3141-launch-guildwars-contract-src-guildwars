@@ -115,7 +115,10 @@ export function replay(events: GameEvent[]): Replay {
   for (const e of events) {
     const a = e.args;
     const wallet = typeof a.wallet === "string" ? lower(a.wallet) : "";
-    if (e.name === "GuildCreated") result.guildIds.add(a.guildId as bigint);
+    if (e.name === "GuildCreated") {
+      result.guildIds.add(a.guildId as bigint);
+      result.roster.set(lower(a.captain as string), a.guildId as bigint);
+    }
     if (e.name === "Joined") result.roster.set(wallet, a.guildId as bigint);
     if (e.name === "Left" || e.name === "Kicked") result.roster.delete(wallet);
     if (e.name === "LookingForGuild") {
@@ -155,6 +158,8 @@ export function historicalMembers(
     const eventTimestamp = a._timestamp as number | undefined;
     if (eventTimestamp && seasonAt(eventTimestamp) >= endSeason) continue;
     const wallet = typeof a.wallet === "string" ? lower(a.wallet) : "";
+    if (e.name === "GuildCreated")
+      roster.set(lower(a.captain as string), a.guildId as bigint);
     if (e.name === "Joined") roster.set(wallet, a.guildId as bigint);
     if (e.name === "Left" || e.name === "Kicked") {
       roster.delete(wallet);

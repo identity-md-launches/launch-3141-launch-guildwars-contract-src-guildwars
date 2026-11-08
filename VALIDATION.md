@@ -1,8 +1,67 @@
 # Worker validation — Squeek Guild Wars
 
-Implementation and checks completed on 2026-11-08. These are the worker's observations, not independent certification. Production is the repository-root `dist/`; source, lockfile, tests, and reports are in `web/`. No contract was deployed or changed.
+Implementation and revision checks completed on 2026-11-08. These are the worker's observations, not independent certification. Production is the repository-root `dist/`; source, lockfile, tests, and reports are in `web/`. No contract was deployed or changed. The revision record below supersedes the original test counts; the original implementation record is retained afterwards.
 
-## Results
+## Revision: reproduced findings and targeted fixes
+
+All three findings reproduced against the accepted production export at 390×844 in Chromium, without connecting a wallet. Verdicts are in [.imd-responses.json](.imd-responses.json). Before/after captures and counts are in [regression-results.json](web/verification/revision/regression-results.json).
+
+| Finding / final source | Reproduction, correction and recheck |
+| --- | --- |
+| High — `web/src/model.ts:118`, `web/src/model.ts:161`, `web/src/store.ts:160` | Removing the fixtures' extra creator `Joined` events left guild rosters at 1 and 0 members, and both war views at 1 member total. `GuildCreated` now adds its normalized captain to current and historical rosters; creation blocks receive timestamps for season filtering. Both initial and receipt fixtures now match the contract's actual event sequence. Recheck: rosters 2 and 1; current/past war rosters 3; captains' points present. Unit tests cover creation at the Monday boundary, earlier-season exclusion, normalization and later departure. Browser checks also assert creation-block timestamp requests. |
+| Medium — `web/src/components.tsx:178`, `web/src/Community.tsx:218`, `web/src/Community.tsx:292`, `web/src/War.tsx:418` | With every RPC request failing, Trophies claimed no awards and three zero-achiever totals; War claimed no results; recruiting/profiles stayed in reading placeholders. Those states now require a successful snapshot before asserting empty results or counts. `HistoryStatus` supplies loading/error copy and a nearby Refresh button. Checks cover initial pending/failure on all four routes, Refresh recovery to a known empty history, and preservation of a successful snapshot when a later refresh fails. |
+| Medium — `web/src/Community.tsx:348` | A transient uncached profile error persisted after a successful same-block Refresh, with only 2 getter calls. The effect now depends on `game.updatedAt`, retaining its cancellation cleanup and friendly errors. Separate browser cases fail `members` and `memberSeasonPoints`: each recovers on Refresh at block 12,089,906, makes 4 total profile getter calls, clears the alert and shows profile stats without navigation. |
+
+### Revision verification
+
+Dependencies were installed from the unchanged lockfile in an isolated copy at `test/scratch/revision/workspace/web`, so repository dependency/configuration paths remain untouched. The final source/tests/configuration in that copy match `web/`; its production export was copied byte-for-byte into the delivered `dist/`. Scratch dependencies, browser downloads and caches are excluded from submission.
+
+Actual commands (run from the repository root):
+
+```sh
+npm ci --prefix test/scratch/revision/workspace/web --cache test/scratch/npm-cache --no-audit --no-fund
+npm --prefix test/scratch/revision/workspace/web run typecheck
+npm --prefix test/scratch/revision/workspace/web run test:unit
+npm --prefix test/scratch/revision/workspace/web run build
+PLAYWRIGHT_BROWSERS_PATH="$PWD/test/scratch/browsers" npm --prefix test/scratch/revision/workspace/web run test:ui
+PLAYWRIGHT_BROWSERS_PATH="$PWD/test/scratch/browsers" npm --prefix test/scratch/revision/workspace/web run test:live
+IMD_PLAYWRIGHT="$PWD/test/scratch/revision/workspace/web/node_modules/playwright/index.mjs" PLAYWRIGHT_BROWSERS_PATH="$PWD/test/scratch/browsers" node .imd/reads/skills/design-critic/scripts/taste.mjs --out test/scratch/taste
+```
+
+| Check | Actual revision result |
+| --- | --- |
+| Production build | Pass, Vite 7.3.7; relative assets and hash navigation at `/preview/` |
+| Typecheck | Pass, `tsc --noEmit` |
+| Unit tests | 14 passed, 0 failed |
+| Chromium interactions | 20 passed, 0 failed; WebKit explicitly skipped because host libraries are unavailable |
+| Accessibility | No violations in the selected Axe WCAG 2 A/AA and 2.1 AA checks on seven routes and the added history-error state; no script/local resource errors in the interaction suite |
+| Reflow | No horizontal page overflow at 320/390/760/1440; includes all four affected initial-error views |
+| Live read | Pass; chain 11155111, block 12,090,387, guildCount 0, zero RPC errors, matching existing runtime fingerprint; read-only public RPC, no connected wallet or writes |
+| First 390×844 screen | Product, Create action and complete empty-guild message visible; action bottom 395.41px, empty-message bottom 839.75px |
+| Pinned taste@1 | 12/16 raw checks; render, layout, targets, resolved-solid contrast, type sizes, glyphs, slogans, repetition, copy budget, surfaces, motion and metadata pass |
+
+Command outputs and machine-readable evidence: [build](web/verification/revision/build.txt), [typecheck](web/verification/revision/typecheck.txt), [unit tests](web/verification/revision/unit-tests.txt), [interactions](web/verification/revision/interaction-results.json), [live read](web/verification/revision/live-read.json), [taste](web/verification/revision/taste.json), [bundle audit](web/verification/revision/bundle-audit.json).
+
+The four raw probe exceptions remain outside this revision's defects: casing/tracking follow the explicit “Uppercase small labels with wide letter spacing” direction; mono prose follows “IBM Plex Mono for text”; the eyebrow heuristic identifies navigation “Trophies” near the hero and a season metric label near “Reading…”, rather than added heading kickers. The probe measures the initial loading route on this runner; successful live reads use the existing read-only curl bridge. Its contrast check leaves 53 boxes over art/gradients unmeasured.
+
+### Better Interface review of the revision
+
+Read the pinned workflow, core principles of all six domains and documentation method. Scope: affected membership displays and history/profile recovery; preserve the accepted visual system. The visual idea remains generated guild hamsters in the existing dark community-game dashboard.
+
+| Domain | Coverage and evidence |
+| --- | --- |
+| Accessibility | Checked native Refresh button, visible label in accessible name, status text, error-state Axe scan, existing keyboard wallet/focus-restoration checks and reduced-motion check. Screen readers and native-device access remain unperformed. |
+| Layout | Checked actual exported mobile creator roster, historical war and history-error screenshots, default live first screen, all four error routes at 320/390/760/1440 and existing desktop guild/war overflow tests. Native 200% zoom, RTL and pseudo-localization remain unperformed. |
+| Writing | Corrected unknown-as-empty claims; consistent loading/error/retry text and existing friendly profile errors. Rechecked no zero achievers or empty-history claims before the first successful snapshot. |
+| Typography | Existing families, six-size tokens and local fonts retained. Viewed wrapping of full addresses, creator scores and the two-line history error; live check confirms all local faces loaded. Other platform font rendering unverified. |
+| Colors | Existing tokens retained; new history error reuses `--danger` on `.card`; Axe error-state contrast and the probe's resolved-solid checks pass. No new color system or blanket contrast claim; gradient/art pairs remain outside measured coverage. |
+| UI | Shared `HistoryStatus` reuses `.empty-state` and `.secondary`; checked loading, failed, retry, successful-empty and stale-snapshot states. Existing signature review, pending, rejection, receipt, SVG download and reduced-motion interactions pass. No real signatures or 10%-speed DevTools replay. |
+
+Viewed screenshots: [creator roster at 390](web/verification/revision/screenshots/creator-roster-390.png), [past war at 390](web/verification/revision/screenshots/creator-war-390.png), [history error at 390](web/verification/revision/screenshots/history-error-390.png), [live first screen](web/verification/revision/screenshots/live-390-first.png). The assigned browser tool was attempted and failed at launch with “Socket path too long”; standalone Playwright Chromium produced these screenshots and the recorded interactions. This is a tool limitation, not a claimed browser-tool pass.
+
+Complete for the stated revision scope. Remaining limits: no native wallets/Coinbase passkeys, real signatures, physical phones, screen readers, native zoom or WebKit session. The existing ABI-pin discrepancy and public RPC/reorg limitations are unchanged. No ignore file, contract, build configuration or dependency manifest/lockfile was changed.
+
+## Original implementation results (retained record)
 
 | Check                            | Actual result                                                                       |
 | -------------------------------- | ----------------------------------------------------------------------------------- |

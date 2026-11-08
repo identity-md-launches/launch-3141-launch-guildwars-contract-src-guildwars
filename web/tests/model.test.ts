@@ -78,7 +78,6 @@ test("log decoding preserves indexed wallet, guild, bonus flags and streak", () 
 });
 test("replay reconstructs members, removes departed members, and honors latest opt-in", () => {
   const events = [
-    event("Joined", { guildId: 1n, wallet: walletA }),
     event("GuildCreated", { guildId: 1n, captain: walletA }),
     event("Joined", { guildId: 1n, wallet: walletB }),
     event("LookingForGuild", { wallet: walletB, looking: true }),
@@ -100,7 +99,7 @@ test("historic rosters freeze at the season boundary and departure removes seaso
   const season = 2966n;
   const start = seasonStart(season) / 1000;
   const events = [
-    event("Joined", { guildId: 1n, wallet: walletA, _timestamp: start }),
+    event("GuildCreated", { guildId: 1n, captain: walletA, _timestamp: start }),
     event("CheckedIn", { guildId: 1n, wallet: walletA, season, points: 20n }),
     event("Joined", { guildId: 1n, wallet: walletB, _timestamp: start }),
     event("CheckedIn", { guildId: 1n, wallet: walletB, season, points: 25n }),
@@ -123,6 +122,48 @@ test("historic rosters freeze at the season boundary and departure removes seaso
   assert.deepEqual(historicalMembers(events, 2n, season), [
     { address: walletB, points: 10 },
   ]);
+});
+test("creation adds a normalized captain without Joined, only from its creation season", () => {
+  const captain = "0xAbCdEfabcdefABCDEFabcdefABCDEFabcdefABCD12";
+  const season = 2966n;
+  const start = seasonStart(season) / 1000;
+  const events = [
+    event("GuildCreated", { guildId: 1n, captain, _timestamp: start }),
+    event("CheckedIn", {
+      guildId: 1n,
+      wallet: captain,
+      season,
+      points: 25n,
+    }),
+    event("GuildCreated", {
+      guildId: 2n,
+      captain: walletB,
+      _timestamp: start + 7 * 86400,
+    }),
+  ];
+  assert.equal(replay(events).roster.get(captain.toLowerCase()), 1n);
+  assert.equal(replay(events).roster.get(walletB), 2n);
+  assert.deepEqual(historicalMembers(events, 1n, season - 1n), []);
+  assert.deepEqual(historicalMembers(events, 1n, season), [
+    { address: captain.toLowerCase(), points: 25 },
+  ]);
+  assert.deepEqual(historicalMembers(events, 2n, season), []);
+  assert.deepEqual(historicalMembers(events, 2n, season + 1n), [
+    { address: walletB, points: 0 },
+  ]);
+  const departed = [
+    ...events,
+    event("Left", {
+      guildId: 1n,
+      wallet: captain,
+      _timestamp: start + 7 * 86400 + 1,
+    }),
+  ];
+  assert.equal(replay(departed).roster.has(captain.toLowerCase()), false);
+  assert.deepEqual(historicalMembers(departed, 1n, season), [
+    { address: captain.toLowerCase(), points: 25 },
+  ]);
+  assert.deepEqual(historicalMembers(departed, 1n, season + 1n), []);
 });
 test("podiums use only actual WarResult scores, order ties deterministically, and do not invent third place", () => {
   const wars = [

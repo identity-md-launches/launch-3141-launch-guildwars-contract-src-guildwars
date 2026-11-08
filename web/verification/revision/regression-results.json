@@ -1,0 +1,47 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "data": "Synthetic RPC only; disconnected wallet; block fixed at 12089906.",
+  "before": {
+    "rosters": {
+      "guild1": 1,
+      "guild2": 0,
+      "currentWar": 1,
+      "historicalWar": 1
+    },
+    "history": {
+      "trophies": "Bragging rights, earned.\n\nLittle trophies for a whole lot of showing up.\n\nSeason podiums\n\nTop three recorded averages among guilds in submitted WarResult events. These are cosmetic community trophies, with no token or payout. Equal scores are ordered by guild ID for display.\n\n2\n1\n3\nReading past seasons\u2026\n\nNo season trophies awarded yet. Podiums appear when past-season wars are submitted.\n\nClimb the tiers\nBronze\n\n0 tier points\n\nSilver\n\n1,000 tier points\n\nGold\n\n3,000 tier points\n\nLegend\n\n6,000 tier points\n\nStreak titles\n7\ndays\nWeek warrior\n\nSeven days, every day.\n\n0 recorded achievers\n30\ndays\nUnstoppable paws\n\nA full month of showing up.\n\n0 recorded achievers\n100\ndays\nCentury squeeker\n\nOne hundred days. One big streak.\n\n0 recorded achievers\n\nA title is earned when a CheckedIn event records the milestone. Past achievements stay in event history.\n\nUnable to read Sepolia\nRefresh\n\nThe public Sepolia RPC is unavailable. Check your connection and retry. Use Refresh to try again.",
+      "war": "A friendly tug of war.\n\nTwo guilds. One average that matters.\n\nFirst guild\nNo guilds yet\nSecond guild\nNo opponent yet\nSeason\nReading\u2026\n+\nReading the arena\u2026\n\nOnce two guilds exist, compare their season averages here.\n\nCreate a guild\nSubmit a war\nSettle a completed season\n\nThe captain of either guild can submit. Both need a check-in, the same season tier, and an unsettled war. This pairing settles both guilds.\n\nWinner +300 tier points \u00b7 tie +150 each \u00b7 loser +0\n\nTwo guilds are needed to compare a war.\n\nReview war submission\nPast results\nNo settled wars yet.\n\nResults appear after a captain submits a completed season.\n\nUnable to read Sepolia\nRefresh\n\nThe public Sepolia RPC is unavailable. Check your connection and retry. Use Refresh to try again.",
+      "recruiting": "There\u2019s a seat for you.\n\nFind a crew, or let a crew find you.\n\nOpen seats\n+\nReading recruiting guilds\u2026\n\nCreate a guild and make room for your crew.\n\nCreate a guild\nThe looking-for-guild board\nLet captains know you\u2019re looking\n\nOpt in to publish your wallet here. Your profile has game activity only. You can remove your listing at any time.\n\nConnect to opt in\nReading public listings\u2026\n\nThe board is opt-in. Be the first to say you\u2019re looking.\n\nUnable to read Sepolia\nRefresh\n\nThe public Sepolia RPC is unavailable. Check your connection and retry. Use Refresh to try again.",
+      "profile": "Public player profile\n\nOnly public GuildWars activity appears here.\n\n0x1111111111111111111111111111111111111111\n\nReading this wallet\u2019s game activity\u2026\n\nUnable to read Sepolia\nRefresh\n\nThe public Sepolia RPC is unavailable. Check your connection and retry. Use Refresh to try again."
+    },
+    "profile": {
+      "beforeReads": 2,
+      "afterReads": 2,
+      "alerts": 1,
+      "block": "Sepolia \u00b7 block 12,089,906"
+    }
+  },
+  "after": {
+    "rosters": {
+      "guild1": 2,
+      "guild2": 1,
+      "currentWar": 3,
+      "historicalWar": 3
+    },
+    "history": {
+      "trophies": "Bragging rights, earned.\n\nLittle trophies for a whole lot of showing up.\n\nSeason podiums\n\nTop three recorded averages among guilds in submitted WarResult events. These are cosmetic community trophies, with no token or payout. Equal scores are ordered by guild ID for display.\n\nHistory could not be loaded. Refresh to try again.\n\nRefresh\nClimb the tiers\nBronze\n\n0 tier points\n\nSilver\n\n1,000 tier points\n\nGold\n\n3,000 tier points\n\nLegend\n\n6,000 tier points\n\nStreak titles\n7\ndays\nWeek warrior\n\nSeven days, every day.\n\nHistory unavailable\n30\ndays\nUnstoppable paws\n\nA full month of showing up.\n\nHistory unavailable\n100\ndays\nCentury squeeker\n\nOne hundred days. One big streak.\n\nHistory unavailable\n\nA title is earned when a CheckedIn event records the milestone. Past achievements stay in event history.\n\nUnable to read Sepolia\nRefresh\n\nThe public Sepolia RPC is unavailable. Check your connection and retry. Use Refresh to try again.",
+      "war": "A friendly tug of war.\n\nTwo guilds. One average that matters.\n\nFirst guild\nHistory unavailable\nSecond guild\nHistory unavailable\nSeason\nHistory unavailable\n\nHistory could not be loaded. Refresh to try again.\n\nRefresh\nSubmit a war\nSettle a completed season\n\nThe captain of either guild can submit. Both need a check-in, the same season tier, and an unsettled war. This pairing settles both guilds.\n\nWinner +300 tier points \u00b7 tie +150 each \u00b7 loser +0\n\nTwo guilds are needed to compare a war.\n\nReview war submission\nPast results\n\nHistory could not be loaded. Refresh to try again.\n\nRefresh\nUnable to read Sepolia\nRefresh\n\nThe public Sepolia RPC is unavailable. Check your connection and retry. Use Refresh to try again.",
+      "recruiting": "There\u2019s a seat for you.\n\nFind a crew, or let a crew find you.\n\nOpen seats\n\nHistory could not be loaded. Refresh to try again.\n\nRefresh\nThe looking-for-guild board\nLet captains know you\u2019re looking\n\nOpt in to publish your wallet here. Your profile has game activity only. You can remove your listing at any time.\n\nConnect to opt in\n\nHistory could not be loaded. Refresh to try again.\n\nRefresh\nUnable to read Sepolia\nRefresh\n\nThe public Sepolia RPC is unavailable. Check your connection and retry. Use Refresh to try again.",
+      "profile": "Public player profile\n\nOnly public GuildWars activity appears here.\n\n0x1111111111111111111111111111111111111111\n\nHistory could not be loaded. Refresh to try again.\n\nRefresh\nUnable to read Sepolia\nRefresh\n\nThe public Sepolia RPC is unavailable. Check your connection and retry. Use Refresh to try again."
+    },
+    "profile": {
+      "beforeReads": 2,
+      "afterReads": 4,
+      "alerts": 0,
+      "block": "Sepolia \u00b7 block 12,089,906"
+    }
+  }
+}

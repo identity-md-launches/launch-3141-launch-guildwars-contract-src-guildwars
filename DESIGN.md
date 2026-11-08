@@ -82,6 +82,8 @@ Cards use the requested 12px radius. Buttons and fields use 7px; small badges 5p
 
 Buttons expose rest, hover, active, focus-visible, and disabled states. Focus uses a 2px light-purple outline with 4px offset. Primary controls are at least 44px high; the compact refresh control is 32px and separated from adjacent controls. Form errors identify and focus the relevant field. Status and error announcements use status/alert regions.
 
+Before the first successful history snapshot, War, Trophies, Recruiting and public profiles reuse `HistoryStatus` from `components.tsx`. It uses the existing `.empty-state` spacing, muted loading copy and a status region. Failed history uses the danger text token and a secondary “Refresh” button (accessible name “Refresh history”) beside the message. Counts and empty claims appear only after a snapshot exists; a later read failure keeps that snapshot and the shared `ReadStatus` warning. Title cards show “History unavailable” rather than zero achievers when the initial read fails. This adds no new color, type, spacing or responsive tokens.
+
 Motion is opt-in under `prefers-reduced-motion: no-preference`: 150ms interaction transitions, 0.96 press scale, a finite 600ms pull sequence repeated twice for newly observed check-ins, a rope-flag transition, and a loading spinner. Reduced motion keeps the score and lead text without those animations. Initial history loading does not animate old check-ins.
 
 ## Do's and Don'ts

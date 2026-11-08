@@ -1,0 +1,70 @@
+{
+  "scope": "Revision only: full contents of modified and newly added files; deletions add zero bytes. Scratch and pinned input files are removed before submission.",
+  "limitBytes": 8388608,
+  "checks": {
+    "allowedPaths": true,
+    "protectedConfigurationAndDependenciesUnchanged": true,
+    "noIgnoreChanges": true,
+    "noDependencyCachesArchivesOrSourceMapsInSubmission": true,
+    "noSymlinksOrSubmodules": true,
+    "sourceMirrorMatches": true,
+    "deliveredExportMatchesTestedBuild": true,
+    "relativeAssetsExist": true,
+    "metadataComplete": true,
+    "fixtureAddressesAbsentFromRuntime": true,
+    "findingResponsesComplete": true
+  },
+  "productionExportBytes": 934759,
+  "productionFileCount": 17,
+  "relativeAssetsChecked": [
+    "dist/assets/barlow-condensed-latin-600-normal-DepVgxBB.woff2",
+    "dist/assets/ccip-BcvjSt_q.js",
+    "dist/assets/dist-BAWHEXQw.js",
+    "dist/assets/ibm-plex-mono-latin-400-normal-DMJ8VG8y.woff2",
+    "dist/assets/ibm-plex-mono-latin-600-normal-BgSNZQsw.woff2",
+    "dist/assets/index-BRXFELoB.css",
+    "dist/assets/index-SC6f2-t-.js",
+    "dist/favicon.svg"
+  ],
+  "socialImage": {
+    "width": 1200,
+    "height": 630
+  },
+  "filesCounted": [
+    ".imd-responses.json",
+    "DESIGN.md",
+    "README.md",
+    "VALIDATION.md",
+    "dist/assets/ccip-BcvjSt_q.js",
+    "dist/assets/dist-BAWHEXQw.js",
+    "dist/assets/index-SC6f2-t-.js",
+    "dist/index.html",
+    "web/src/Community.tsx",
+    "web/src/War.tsx",
+    "web/src/components.tsx",
+    "web/src/model.ts",
+    "web/src/store.ts",
+    "web/tests/browser.mjs",
+    "web/tests/fixtures.mjs",
+    "web/tests/model.test.ts",
+    "web/verification/revision/build.txt",
+    "web/verification/revision/bundle-audit.json",
+    "web/verification/revision/interaction-results.json",
+    "web/verification/revision/live-read.json",
+    "web/verification/revision/regression-results.json",
+    "web/verification/revision/screenshots/creator-roster-390.png",
+    "web/verification/revision/screenshots/creator-war-390.png",
+    "web/verification/revision/screenshots/history-error-390.png",
+    "web/verification/revision/screenshots/live-390-first.png",
+    "web/verification/revision/taste.json",
+    "web/verification/revision/typecheck.txt",
+    "web/verification/revision/unit-tests.txt"
+  ],
+  "deletedFiles": [
+    "dist/assets/ccip-C5iz7ZFg.js",
+    "dist/assets/dist-BMqXlJB9.js",
+    "dist/assets/index-i2nwlaWI.js"
+  ],
+  "totalSubmissionBytes": 1328319,
+  "remainingBytes": 7060289
+}

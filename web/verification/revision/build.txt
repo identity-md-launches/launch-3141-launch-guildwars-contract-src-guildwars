@@ -1,0 +1,17 @@
+> squeek-guild-wars-web@1.0.0 build
+> vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 824 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/index.html                                                 1.38 kB │ gzip:   0.63 kB
+../dist/assets/ibm-plex-mono-latin-400-normal-DMJ8VG8y.woff2      14.71 kB
+../dist/assets/ibm-plex-mono-latin-600-normal-BgSNZQsw.woff2      15.62 kB
+../dist/assets/barlow-condensed-latin-600-normal-DepVgxBB.woff2   22.31 kB
+../dist/assets/index-BRXFELoB.css                                 40.61 kB │ gzip:  12.27 kB
+../dist/assets/ccip-BcvjSt_q.js                                    4.31 kB │ gzip:   1.95 kB
+../dist/assets/dist-BAWHEXQw.js                                  109.92 kB │ gzip:  35.49 kB
+../dist/assets/index-SC6f2-t-.js                                 648.12 kB │ gzip: 198.69 kB
+✓ built in 6.86s

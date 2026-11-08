@@ -84,7 +84,6 @@ export function fixture(mode = "populated") {
       [1n, A, "Midnight Runners", 10],
       [2n, B, "Nebula Nibblers", 5],
     ]) {
-      log("Joined", { guildId: id, wallet: captain }, priorTime + 1);
       log("GuildCreated", { guildId: id, captain, name, seats }, priorTime + 1);
     }
     log("Joined", { guildId: 1n, wallet: C }, priorTime + 2);
@@ -324,11 +323,6 @@ export function fixture(mode = "populated") {
         created = true;
         tip++;
         log(
-          "Joined",
-          { guildId: 1n, wallet: A },
-          Math.floor(Date.now() / 1000),
-        );
-        log(
           "GuildCreated",
           { guildId: 1n, captain: A, name: "Test Crew", seats: 10 },
           Math.floor(Date.now() / 1000),
@@ -356,6 +350,7 @@ export function fixture(mode = "populated") {
   return {
     rpc,
     calls,
+    logs,
     season,
     prior,
     appendCheck() {

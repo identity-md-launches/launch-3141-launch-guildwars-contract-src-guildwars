@@ -48,6 +48,8 @@ The UI suite serves the production export under `/preview/` and uses isolated sy
 
 Actual results, coverage, fixes, remaining limits, and screenshot links are in [VALIDATION.md](VALIDATION.md). Implemented design tokens and responsive behavior are in [DESIGN.md](DESIGN.md). Machine-readable reports and selected screenshots are in `web/verification/`. Native wallets, real signed transactions, physical devices, native 200% zoom, and screen readers were not tested.
 
+The reviewed revision fixes creator membership from `GuildCreated` alone, distinguishes unavailable history from empty results, and retries uncached player profiles on a successful Refresh even at the same block. Revision validation passed the production build, typecheck, 14 unit tests, 20 Chromium interaction checks, and a read-only live Sepolia check (guildCount 0). WebKit was skipped because its host libraries are unavailable. Evidence is in `web/verification/revision/`; the three finding responses are in `.imd-responses.json`.
+
 The compiler-derived ABI's canonical hash differs from the pinned deployment hash. This is recorded rather than presented as a match. The compiled Solidity runtime, with the pinned immutable values inserted, matched the live 11,238-byte runtime exactly. See `web/verification/contract-verification.json`. `npm run verify-contract` regenerates the ABI and runtime fingerprint from the unchanged source and live code; normal site builds use the delivered generated files and do not require this step.
 
 `npm run social` regenerates the 1200×630 local social image once Playwright Chromium is installed. Fonts and wallet-mark licenses are included in `web/public/licenses/` and `dist/licenses/`. The design references' licenses are retained in `web/verification/`.
