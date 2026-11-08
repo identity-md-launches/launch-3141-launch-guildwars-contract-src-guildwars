@@ -1,0 +1,14 @@
+{
+  "kind": "evm_contracts",
+  "contracts": [
+    {
+      "contract": "GuildWars",
+      "constructorArgs": [
+        "0x2dccb11fcc2defdd188555e45acb52231e82e218",
+        "0x50fd1780526c3186a0c037c7622203bc4fb611ca",
+        "1000000000000000000"
+      ]
+    }
+  ],
+  "notes": "Deploy only GuildWars from src/GuildWars.sol on Ethereum Sepolia (chainId 11155111) and verify its source on the Sepolia explorer after deployment. It is the registry for Squeek Guild Wars, an unofficial community team game for Squeekchain: wallets form guilds, check in once per UTC day, and guilds are scored by average member season points. Constructor arguments are mining, staking and minStakerPower, in that order. The mining and staking addresses are the existing official SqueekMining and SqueekStaking proxies from https://docs.squeekchain.com/assets/deployments/sepolia.json, release core-sepolia-20261103. The immutable minStakerPower is 1000000000000000000 (1 power unit, approximately 40 SQK staked). GuildWars has no owner, admin, pause or proxy and provides no SQK, ETH or NFT custody. Its external calls are guarded, gas-capped read-only calls to those dependencies; failed reads omit the corresponding bonus. No funding or initialization calls are required. CONTRACT.md documents the rules and known limitations, including invite codes exposed in join calldata, captain-selected war pairings that permit collusion, and immediate rejoining after removal."
+}
