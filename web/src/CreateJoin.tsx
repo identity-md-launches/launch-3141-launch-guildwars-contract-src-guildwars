@@ -6,6 +6,7 @@ import { Hamster } from "./art";
 import { SectionTitle, WalletHint } from "./components";
 import { Icon } from "./icons";
 import { useGame } from "./store";
+import { matchingGuildIds } from "./model";
 import { useTransaction } from "./Transactions";
 import { openWallet } from "./Wallet";
 
@@ -24,6 +25,10 @@ export function CreateJoin({ joinFirst = false }: { joinFirst?: boolean }) {
   const { address, chainId } = useAccount();
   const { act, busy } = useTransaction();
   const game = useGame();
+  const matchingIds = matchingGuildIds(game.events, name);
+  const duplicateWarning = matchingIds.length
+    ? `A guild named like this already exists (${matchingIds.map((id) => `#${id}`).join(", ")}). Players will tell yours apart by its ID.`
+    : "";
   const member = game.people.find(
     (p) => p.address.toLowerCase() === address?.toLowerCase(),
   );
@@ -67,7 +72,7 @@ export function CreateJoin({ joinFirst = false }: { joinFirst?: boolean }) {
         name: "createGuild",
         args: [name.trim(), Number(seats), keccak256(toHex(secret))],
         title: "Create this guild?",
-        explanation: `Create “${name.trim()}” with ${seats} seats on Sepolia. You become its captain and first member. Only the hash of a random invite code is stored. Save the code when this transaction confirms.`,
+        explanation: `${duplicateWarning ? `${duplicateWarning} ` : ""}Create “${name.trim()}” with ${seats} seats on Sepolia. You become its captain and first member. Your guild receives its own ID when created. Only the hash of a random invite code is stored. Save the code when this transaction confirms.`,
         code: secret,
       });
     } else {
@@ -131,11 +136,14 @@ export function CreateJoin({ joinFirst = false }: { joinFirst?: boolean }) {
                   onChange={(e) => setName(e.target.value)}
                   maxLength={24}
                   placeholder="e.g. Midnight Runners"
-                  aria-describedby="name-hint form-error"
+                  aria-describedby="name-hint name-warning form-error"
                   aria-invalid={Boolean(error) && errorField === "name"}
                 />
                 <p className="field-hint" id="name-hint">
                   1–24 characters: letters, numbers, spaces, hyphens.
+                </p>
+                <p className="name-warning" id="name-warning" role="status">
+                  {duplicateWarning}
                 </p>
                 <label htmlFor="guild-seats">Seats</label>
                 <input

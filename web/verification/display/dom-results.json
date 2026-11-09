@@ -1,0 +1,33 @@
+{
+  "kind": "DOM interaction checks; hook substitutes, no layout engine",
+  "checks": [
+    {
+      "name": "0 guilds: Rankings, War and Create render honest states",
+      "passed": true
+    },
+    {
+      "name": "1 guilds: Rankings, War and Create render honest states",
+      "passed": true
+    },
+    {
+      "name": "Rankings keeps IDs, members/seats, small-sample context, season filter and both sorts",
+      "passed": true
+    },
+    {
+      "name": "Duplicate names warn inline and in review, normalize case/spaces, and never block creating",
+      "passed": true
+    },
+    {
+      "name": "War shows each season count and ID, warns at a gap of 3, counts only season departures",
+      "passed": true
+    },
+    {
+      "name": "My guild removal review explains score and rejoining; recent changes expose wallet and real UTC block time",
+      "passed": true
+    },
+    {
+      "name": "Recruiting, trophies and profiles retain copied names with IDs; Rules lists all known limits",
+      "passed": true
+    }
+  ]
+}

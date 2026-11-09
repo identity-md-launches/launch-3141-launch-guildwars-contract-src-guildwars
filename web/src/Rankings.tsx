@@ -15,6 +15,7 @@ export function Rankings() {
   const game = useGame();
   const [search, setSearch] = useState("");
   const [tier, setTier] = useState("all");
+  const [largeCrewsOnly, setLargeCrewsOnly] = useState(false);
   const [sort, setSort] = useState("score");
   const guilds = useMemo(
     () =>
@@ -23,6 +24,7 @@ export function Rankings() {
           (g) =>
             g.memberCount > 0 &&
             g.name.toLowerCase().includes(search.toLowerCase()) &&
+            (!largeCrewsOnly || g.seasonMembers >= 5) &&
             (tier === "all" || g.tier === Number(tier)),
         )
         .sort((a, b) =>
@@ -34,7 +36,7 @@ export function Rankings() {
                 ? -1
                 : 1,
         ),
-    [game.guilds, search, tier, sort],
+    [game.guilds, search, tier, sort, largeCrewsOnly],
   );
   return (
     <>
@@ -138,6 +140,14 @@ export function Rankings() {
               ))}
             </select>
           </label>
+          <label className="crew-filter">
+            <input
+              type="checkbox"
+              checked={largeCrewsOnly}
+              onChange={(e) => setLargeCrewsOnly(e.target.checked)}
+            />
+            Only guilds with 5+ members
+          </label>
           <label className="select-field sort-select">
             <span className="sr-only">Sort guilds</span>
             <select
@@ -161,7 +171,7 @@ export function Rankings() {
                 <th>Guild</th>
                 <th className="tier-col">Tier</th>
                 <th className="crew-col">Members</th>
-                <th className="score-col">Pts / member</th>
+                <th className="score-col">Score / member</th>
               </tr>
             </thead>
             <tbody>
@@ -177,11 +187,18 @@ export function Rankings() {
                   <td className="tier-col">
                     <TierBadge tier={guild.tier} />
                   </td>
-                  <td>
+                  <td className="crew-col">
                     {guild.memberCount}
                     <span className="muted"> / {guild.seats}</span>
                   </td>
-                  <td className="score-col">{score(guild.average)}</td>
+                  <td className="score-col">
+                    {score(guild.average)}
+                    {guild.seasonMembers < 5 && (
+                      <span className="small-sample fine muted">
+                        small sample
+                      </span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -194,7 +211,7 @@ export function Rankings() {
                 : "Reading the guild registry…"}
             </div>
           ) : guilds.length === 0 ? (
-            search || tier !== "all" ? (
+            search || tier !== "all" || largeCrewsOnly ? (
               <Empty title="No matching guilds" action={false} art={false}>
                 Try a different name or{" "}
                 <button
@@ -202,6 +219,7 @@ export function Rankings() {
                   onClick={() => {
                     setSearch("");
                     setTier("all");
+                    setLargeCrewsOnly(false);
                   }}
                 >
                   clear filters
@@ -215,6 +233,10 @@ export function Rankings() {
             )
           ) : null}
         </div>
+        <p className="table-note fine muted">
+          Averages favour small crews: check the member count before comparing
+          guilds.
+        </p>
         <p className="table-note fine muted">
           Scores come from the GuildWars contract. Members who leave take their
           current-season points with them.

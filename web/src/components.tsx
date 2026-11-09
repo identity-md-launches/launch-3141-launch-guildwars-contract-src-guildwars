@@ -114,8 +114,7 @@ export function GuildName({
     >
       <Hamster id={guild.id} name={guild.name} decorative />
       <span>
-        {guild.name}
-        <span className="guild-id">Guild #{String(guild.id)}</span>
+        {guild.name} <span className="guild-id">#{String(guild.id)}</span>
       </span>
     </a>
   );

@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-09",
+  "nativeChecksPerformed": false,
+  "mobile375Overflow": "unverified",
+  "firstScreen390": "unverified",
+  "screenshots": "none for this revision",
+  "browserTool": {
+    "attempted": true,
+    "passed": false,
+    "error": "chrome_crashpad_handler: --database is required; exited with SIGTRAP"
+  },
+  "chromiumUI": {
+    "attempted": true,
+    "exitCode": 1,
+    "browserExit": "SIGTRAP / 133",
+    "checksRun": 0
+  },
+  "taste": {
+    "attempted": true,
+    "exitCode": 2,
+    "measured": false,
+    "reason": "Chromium launch failed with SIGTRAP"
+  },
+  "firefox": {
+    "attempted": true,
+    "passed": false,
+    "error": "Couldn't find the application directory"
+  },
+  "webkit": {
+    "installed": true,
+    "nativeInteractionPerformed": false,
+    "installationWarning": "Missing host libraries"
+  }
+}

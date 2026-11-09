@@ -11,6 +11,9 @@ import { abi, CONTRACT, friendlyError, transactionData } from "../src/chain";
 import {
   decodeLogs,
   historicalMembers,
+  guildLabel,
+  matchingGuildIds,
+  seasonDepartures,
   podiums,
   replay,
   seasonAt,
@@ -237,8 +240,52 @@ test("share-card lines preserve guild names containing the word by", () => {
     2966n,
     true,
   );
-  assert.ok(card.includes(">Stand by Me beat Play by Play</text>"));
+  assert.ok(card.includes(">Stand by Me #1 beat Play by Play #2</text>"));
   assert.ok(card.includes(">by 14%</text>"));
+});
+test("guild identity survives copied names; matching uses creation events and collapses spaces", () => {
+  const events = [
+    event("GuildCreated", { guildId: 1n, name: "Golden Squeek" }),
+    event("GuildCreated", { guildId: 3n, name: " golden  SQUEEK " }),
+    event("Joined", { guildId: 4n, name: "Golden Squeek" }),
+    event("GuildCreated", { guildId: 5n, name: "Golden-Squeek" }),
+  ];
+  assert.deepEqual(matchingGuildIds(events, "  GOLDEN   squeek "), [1n, 3n]);
+  assert.deepEqual(matchingGuildIds(events, ""), []);
+  assert.deepEqual(matchingGuildIds(events, "GoldenSqueek"), []);
+  assert.equal(
+    guildLabel({ id: 3n, name: "Golden Squeek" }),
+    "Golden Squeek #3",
+  );
+  for (const settled of [false, true]) {
+    const card = shareCard(
+      { id: 1n, name: "Golden Squeek" },
+      { id: 3n, name: "Golden Squeek" },
+      10_000000n,
+      0n,
+      2966n,
+      settled,
+    );
+    assert.ok(card.includes("Golden Squeek #1"));
+    assert.ok(card.includes("Golden Squeek #3"));
+  }
+});
+test("roster change context counts only departures from the selected guild and season", () => {
+  const season = 2966n;
+  const start = seasonStart(season) / 1000;
+  const events = [
+    event("Kicked", { guildId: 1n, wallet: walletA, _timestamp: start - 1 }),
+    event("Kicked", { guildId: 1n, wallet: walletA, _timestamp: start }),
+    event("Left", { guildId: 1n, wallet: walletB, _timestamp: start + 604799 }),
+    event("Left", { guildId: 1n, wallet: walletA, _timestamp: start + 604800 }),
+    event("Kicked", { guildId: 2n, wallet: walletA, _timestamp: start + 10 }),
+    event("Joined", { guildId: 1n, wallet: walletA, _timestamp: start + 20 }),
+    event("Kicked", { guildId: 1n, wallet: walletB }),
+  ];
+  assert.equal(seasonDepartures(events, 1n, season), 2);
+  assert.equal(seasonDepartures(events, 2n, season), 1);
+  assert.equal(seasonDepartures(events, 1n, season - 1n), 1);
+  assert.equal(seasonDepartures(events, 1n, season + 1n), 1);
 });
 test("primary write calls encode against the source-derived ABI", () => {
   const writes: [string, unknown[]][] = [

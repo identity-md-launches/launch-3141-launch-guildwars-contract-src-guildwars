@@ -22,7 +22,23 @@ npm run preview
 
 Open the local preview URL printed by Vite. `npm run dev` starts source development. `npm run build` replaces the repository-root `dist/` with the production export; it does not modify Solidity or deploy anything. Serve the contents of `dist/` on any static HTTP host. Vite uses `base: "./"`; assets are relative and all navigation uses hash routes, so gateway subpaths need no server rewrites. The export is delivered alongside source and `web/package-lock.json`; hosting does not need to rebuild it.
 
-Pages: Rankings, My guild/public guild profiles, War, Recruiting/player profiles, Trophies, Create / Join, and Rules. All displayed game state comes from the live contract and its event history. GuildCount was 0 during validation; the site shows honest empty states until guilds are created. Generated hamster previews and the empty trophy illustration are labelled or decorative, not example players.
+Pages: Rankings, My guild/public guild profiles, War, Recruiting/player profiles, Trophies, Create / Join, and Rules. All displayed game state comes from the live contract and its event history. The read-only check on 2026-11-09 found one guild, Golden Squeek #1 (1/10 members, season average 20 at block 12,096,958). Counts and scores are read at runtime; empty states are retained for a zero-guild registry. Generated hamster previews and the empty trophy illustration are labelled or decorative, not example players.
+
+## Display update (2026-11-09)
+
+Guild names now show their IDs across rankings, profiles, wars, recruiting, trophies and downloaded war cards. Create warns about matching event names (case and extra spaces ignored) without blocking creation. Rankings keeps Members visible, labels small season samples, and adds an optional 5+ season-members filter. War compares season counts and departures; My guild shows recent removals and explains their score impact before a kick. Rules includes Known limits.
+
+The final production build, typecheck, 16 model tests and seven DOM interaction groups passed. The latter cover zero/one-guild views, duplicate-name creation, season-based filtering, crew-size warnings, historical departure counts, kick review and removal timestamps. **Native-browser validation is incomplete:** the supplied browser launcher failed with a crashpad error, local Chromium exited with SIGTRAP, and the pinned taste probe could not measure. No current 375px overflow, 390px first-screen, native wallet, visual focus or screenshot pass is claimed. See [the latest validation record](VALIDATION.md#display-update-2026-11-09).
+
+The extra DOM fallback requires Happy DOM only for testing. To reproduce without changing the delivered manifest or lockfile, copy `web/` into `test/scratch/site/`, install there, and run:
+
+```sh
+npm ci --prefix test/scratch/site --cache test/scratch/npm-cache --no-audit --no-fund
+npm install --prefix test/scratch/site --cache test/scratch/npm-cache --no-save happy-dom
+node test/scratch/site/tests/display.mjs
+```
+
+`display.mjs` mounts the real page components using React DOM with substituted account, store and transaction hooks. It checks interaction/state behavior; it has no layout engine and cannot validate rendering or signatures. Scratch dependencies, caches and generated test bundles are excluded from delivery. The existing production dependencies and lockfile remain unchanged.
 
 ## Wallets and data
 
@@ -48,7 +64,7 @@ The UI suite serves the production export under `/preview/` and uses isolated sy
 
 Actual results, coverage, fixes, remaining limits, and screenshot links are in [VALIDATION.md](VALIDATION.md). Implemented design tokens and responsive behavior are in [DESIGN.md](DESIGN.md). Machine-readable reports and selected screenshots are in `web/verification/`. Native wallets, real signed transactions, physical devices, native 200% zoom, and screen readers were not tested.
 
-The reviewed revision fixes creator membership from `GuildCreated` alone, distinguishes unavailable history from empty results, and retries uncached player profiles on a successful Refresh even at the same block. Revision validation passed the production build, typecheck, 14 unit tests, 20 Chromium interaction checks, and a read-only live Sepolia check (guildCount 0). WebKit was skipped because its host libraries are unavailable. Evidence is in `web/verification/revision/`; the three finding responses are in `.imd-responses.json`.
+The earlier revision fixes creator membership from `GuildCreated` alone, distinguishes unavailable history from empty results, and retries uncached player profiles on a successful Refresh even at the same block. That earlier revision passed the production build, typecheck, 14 unit tests, 20 Chromium interaction checks, and a read-only live Sepolia check (guildCount 0); these are historical results, not checks of the latest display changes. WebKit was skipped because its host libraries are unavailable. Evidence is in `web/verification/revision/`; the three finding responses are in `.imd-responses.json`.
 
 The compiler-derived ABI's canonical hash differs from the pinned deployment hash. This is recorded rather than presented as a match. The compiled Solidity runtime, with the pinned immutable values inserted, matched the live 11,238-byte runtime exactly. See `web/verification/contract-verification.json`. `npm run verify-contract` regenerates the ABI and runtime fingerprint from the unchanged source and live code; normal site builds use the delivered generated files and do not require this step.
 

@@ -52,6 +52,25 @@ export function Rules() {
         <h1>Small game. Clear rules.</h1>
         <p>Unofficial community project; no tokens, no payouts.</p>
       </div>
+      <section className="known-limits">
+        <SectionTitle>Known limits</SectionTitle>
+        <ul>
+          <li>
+            Average scoring favours small guilds. Check the member count when
+            comparing scores.
+          </li>
+          <li>
+            Captains can remove members, which removes their season points and
+            changes the average.
+          </li>
+          <li>
+            Guild names are not unique. Use the guild ID to tell teams apart.
+          </li>
+          <li>
+            Many wallets can be created, but points have no monetary value.
+          </li>
+        </ul>
+      </section>
       <div className="rules-layout">
         <section className="card rules-list">
           {rules.map((rule, index) => (

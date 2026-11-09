@@ -12,9 +12,11 @@ import {
 import { Icon } from "./icons";
 import {
   historicalMembers,
+  guildLabel,
   lower,
   score,
   seasonLabel,
+  seasonDepartures,
   type Guild,
 } from "./model";
 import { useGame } from "./store";
@@ -52,7 +54,7 @@ export function TugOfWar({
   const lead =
     scoreA === scoreB
       ? "Evenly matched"
-      : `${scoreA > scoreB ? a.name : b.name} leads by ${score(scoreA > scoreB ? scoreA - scoreB : scoreB - scoreA)} points per member`;
+      : `${guildLabel(scoreA > scoreB ? a : b)} leads by ${score(scoreA > scoreB ? scoreA - scoreB : scoreB - scoreA)} points per member`;
   return (
     <div className="tug-arena" aria-label={lead} role="img">
       <div
@@ -215,10 +217,16 @@ export function WarPage() {
               )}
               {guilds.map((g) => (
                 <option key={String(g.id)} value={String(g.id)}>
-                  {g.name} · #{String(g.id)}
+                  {guildLabel(g)}
                 </option>
               ))}
             </select>
+            {a && (state || !past) && (
+              <span className="fine muted war-picker-context">
+                {score(state?.scoreA ?? a.average)} points / member ·{" "}
+                {state?.countA ?? a.seasonMembers} season members
+              </span>
+            )}
           </label>
           <span className="vs">VS</span>
           <label>
@@ -237,10 +245,16 @@ export function WarPage() {
               )}
               {guilds.map((g) => (
                 <option key={String(g.id)} value={String(g.id)}>
-                  {g.name} · #{String(g.id)}
+                  {guildLabel(g)}
                 </option>
               ))}
             </select>
+            {b && (state || !past) && (
+              <span className="fine muted war-picker-context">
+                {score(state?.scoreB ?? b.average)} points / member ·{" "}
+                {state?.countB ?? b.seasonMembers} season members
+              </span>
+            )}
           </label>
           <label className="war-season">
             Season
@@ -261,6 +275,11 @@ export function WarPage() {
             </select>
           </label>
         </div>
+        {state && Math.abs(state.countA - state.countB) >= 3 && (
+          <p className="notice" role="status">
+            Different crew sizes: the average does not show effort
+          </p>
+        )}
         {game.block === undefined ? (
           <HistoryStatus loading="Reading the arena…" />
         ) : !a || !b ? (
@@ -289,7 +308,7 @@ export function WarPage() {
             <div className="war-scoreboard">
               <div>
                 <TierBadge tier={past ? state.tierA : a.tier} />
-                <h2>{a.name}</h2>
+                <h2>{guildLabel(a)}</h2>
                 <strong>{score(state.scoreA)}</strong>
                 <span className="fine muted">
                   points / member · {state.countA} members
@@ -298,7 +317,7 @@ export function WarPage() {
               <span className="vs">VS</span>
               <div>
                 <TierBadge tier={past ? state.tierB : b.tier} />
-                <h2>{b.name}</h2>
+                <h2>{guildLabel(b)}</h2>
                 <strong>{score(state.scoreB)}</strong>
                 <span className="fine muted">
                   points / member · {state.countB} members
@@ -309,7 +328,7 @@ export function WarPage() {
             <div
               className="lead-track"
               role="meter"
-              aria-label={`${a.name} share of the combined average`}
+              aria-label={`${guildLabel(a)} share of the combined average`}
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={leadPercent}
@@ -354,7 +373,12 @@ export function WarPage() {
             <div className="war-rosters">
               {[a, b].map((guild) => (
                 <div key={String(guild.id)}>
-                  <h3>{guild.name} · member scores</h3>
+                  <h3>{guildLabel(guild)} · member scores</h3>
+                  <p className="fine muted roster-changes">
+                    Roster changed this season:{" "}
+                    {seasonDepartures(game.events, guild.id, season!)} members
+                    left or were removed
+                  </p>
                   {roster(guild).map((member) => (
                     <div className="war-member" key={member.address}>
                       <WalletAddress address={member.address} />
@@ -372,6 +396,9 @@ export function WarPage() {
       </section>
       <section>
         <SectionTitle>Submit a war</SectionTitle>
+        <p className="fine muted">
+          Captains pick their opponent inside the same tier. Wars are cosmetic.
+        </p>
         <div className="card submit-war">
           <div>
             <h3>Settle a completed season</h3>
@@ -403,7 +430,7 @@ export function WarPage() {
                   name: "submitWar",
                   args: [season, a.id, b.id],
                   title: "Submit this war?",
-                  explanation: `Permanently settle season ${season} for “${a.name}” and “${b.name}”. Higher average wins +300 tier points; a tie gives +150 each. The loser loses no points. Both guilds use their one war for this season. The other captain cannot refuse this pairing.`,
+                  explanation: `Permanently settle season ${season} for “${guildLabel(a)}” and “${guildLabel(b)}”. Higher average wins +300 tier points; a tie gives +150 each. The loser loses no points. Both guilds use their one war for this season. The other captain cannot refuse this pairing.`,
                 });
             }}
           >
@@ -425,6 +452,7 @@ export function WarPage() {
             [...game.indexed.wars].reverse().map((war) => {
               const ga = guilds.find((g) => g.id === war.a);
               const gb = guilds.find((g) => g.id === war.b);
+              const winner = guilds.find((g) => g.id === war.winner);
               return (
                 <div className="result-row" key={war.tx}>
                   <div>
@@ -432,15 +460,15 @@ export function WarPage() {
                       Week of {seasonLabel(war.season)}
                     </span>
                     <h3>
-                      {ga?.name ?? `Guild #${war.a}`}{" "}
+                      {ga ? guildLabel(ga) : `Guild #${war.a}`}{" "}
                       <span className="muted">vs</span>{" "}
-                      {gb?.name ?? `Guild #${war.b}`}
+                      {gb ? guildLabel(gb) : `Guild #${war.b}`}
                     </h3>
                     <p>
                       {score(war.scoreA)} : {score(war.scoreB)} pts / member ·{" "}
                       {war.winner === 0n
                         ? "Tie"
-                        : `${guilds.find((g) => g.id === war.winner)?.name ?? `Guild #${war.winner}`} won`}
+                        : `${winner ? guildLabel(winner) : `Guild #${war.winner}`} won`}
                     </p>
                   </div>
                   <a

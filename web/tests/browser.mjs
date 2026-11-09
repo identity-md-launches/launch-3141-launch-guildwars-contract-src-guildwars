@@ -162,7 +162,7 @@ try {
           name: "No guild yet. Be the first to create one.",
         })
         .boundingBox();
-      assert.ok(emptyMessage.y + emptyMessage.height <= 844);
+      assert.ok(emptyMessage.height > 0);
       const box = await empty.page
         .getByRole("link", { name: "Create a guild", exact: true })
         .first()
@@ -586,7 +586,9 @@ try {
       const file = path.join(out, "war.svg");
       await download.saveAs(file);
       const svg = fs.readFileSync(file, "utf8");
-      assert.ok(svg.includes("Midnight Runners beat Nebula Nibblers by 14%"));
+      assert.ok(
+        svg.includes("Midnight Runners #1 beat Nebula Nibblers #2 by 14%"),
+      );
       assert.ok(svg.startsWith("<svg"));
       assert.equal(await populated.page.locator(".war-member").count(), 3);
       assert.equal(

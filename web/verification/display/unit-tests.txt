@@ -1,0 +1,109 @@
+> squeek-guild-wars-web@1.0.0 test:unit
+> node --import tsx --test tests/model.test.ts
+
+TAP version 13
+# Subtest: seasons switch at Monday 00:00 UTC and keep Sunday in the old season
+ok 1 - seasons switch at Monday 00:00 UTC and keep Sunday in the old season
+  ---
+  duration_ms: 0.924834
+  type: 'test'
+  ...
+# Subtest: log decoding preserves indexed wallet, guild, bonus flags and streak
+ok 2 - log decoding preserves indexed wallet, guild, bonus flags and streak
+  ---
+  duration_ms: 2.930776
+  type: 'test'
+  ...
+# Subtest: replay reconstructs members, removes departed members, and honors latest opt-in
+ok 3 - replay reconstructs members, removes departed members, and honors latest opt-in
+  ---
+  duration_ms: 0.261505
+  type: 'test'
+  ...
+# Subtest: historic rosters freeze at the season boundary and departure removes season points
+ok 4 - historic rosters freeze at the season boundary and departure removes season points
+  ---
+  duration_ms: 0.786115
+  type: 'test'
+  ...
+# Subtest: creation adds a normalized captain without Joined, only from its creation season
+ok 5 - creation adds a normalized captain without Joined, only from its creation season
+  ---
+  duration_ms: 0.334254
+  type: 'test'
+  ...
+# Subtest: podiums use only actual WarResult scores, order ties deterministically, and do not invent third place
+ok 6 - podiums use only actual WarResult scores, order ties deterministically, and do not invent third place
+  ---
+  duration_ms: 0.243426
+  type: 'test'
+  ...
+# Subtest: hamsters are deterministic and expose all required visual variants
+ok 7 - hamsters are deterministic and expose all required visual variants
+  ---
+  duration_ms: 6.537781
+  type: 'test'
+  ...
+# Subtest: invite codes use browser cryptography, have the expected alphabet, and hash into bytes32
+ok 8 - invite codes use browser cryptography, have the expected alphabet, and hash into bytes32
+  ---
+  duration_ms: 3.043516
+  type: 'test'
+  ...
+# Subtest: share copy handles percentages, ties, zero scores and XML escaping
+ok 9 - share copy handles percentages, ties, zero scores and XML escaping
+  ---
+  duration_ms: 0.415495
+  type: 'test'
+  ...
+# Subtest: streak title thresholds are exact
+ok 10 - streak title thresholds are exact
+  ---
+  duration_ms: 0.37806
+  type: 'test'
+  ...
+# Subtest: nearby guild averages remain distinct and a small lead never displays as zero
+ok 11 - nearby guild averages remain distinct and a small lead never displays as zero
+  ---
+  duration_ms: 10.008239
+  type: 'test'
+  ...
+# Subtest: share-card lines preserve guild names containing the word by
+ok 12 - share-card lines preserve guild names containing the word by
+  ---
+  duration_ms: 0.53792
+  type: 'test'
+  ...
+# Subtest: guild identity survives copied names; matching uses creation events and collapses spaces
+ok 13 - guild identity survives copied names; matching uses creation events and collapses spaces
+  ---
+  duration_ms: 0.514996
+  type: 'test'
+  ...
+# Subtest: roster change context counts only departures from the selected guild and season
+ok 14 - roster change context counts only departures from the selected guild and season
+  ---
+  duration_ms: 0.161714
+  type: 'test'
+  ...
+# Subtest: primary write calls encode against the source-derived ABI
+ok 15 - primary write calls encode against the source-derived ABI
+  ---
+  duration_ms: 1.806943
+  type: 'test'
+  ...
+# Subtest: errors explain rejection, pending requests, full guilds, codes, daily limits and cooldown
+ok 16 - errors explain rejection, pending requests, full guilds, codes, daily limits and cooldown
+  ---
+  duration_ms: 0.809609
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1053.531742

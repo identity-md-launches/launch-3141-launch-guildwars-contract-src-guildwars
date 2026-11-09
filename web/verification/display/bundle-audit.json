@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-09",
+  "budgetBytes": 8388608,
+  "forbiddenChanges": [],
+  "preservedPaths": [
+    "web/src/chain.ts",
+    "web/src/Wallet.tsx",
+    "web/src/Transactions.tsx",
+    "web/src/store.ts",
+    "web/src/abi.json",
+    "web/src/verified.ts",
+    "src/GuildWars.sol",
+    "web/package.json",
+    "web/package-lock.json",
+    "web/vite.config.ts",
+    "web/tsconfig.json",
+    "foundry.toml"
+  ],
+  "metadata": {
+    "title": true,
+    "description": true,
+    "favicon": true,
+    "og:title": true,
+    "og:image": true
+  },
+  "relativeHtmlAssets": [
+    "./share.png",
+    "./favicon.svg",
+    "./assets/index-BkvDYD4S.js",
+    "./assets/index-DqDd8N_L.css"
+  ],
+  "localCssAssets": [
+    "assets/barlow-condensed-latin-600-normal-DepVgxBB.woff2",
+    "assets/ibm-plex-mono-latin-400-normal-DMJ8VG8y.woff2",
+    "assets/ibm-plex-mono-latin-600-normal-BgSNZQsw.woff2"
+  ],
+  "exportBytes": 939524,
+  "exportMatchesBuild": true,
+  "noNewSubmodulesOrSymlinks": true,
+  "noDependencyCacheOrArchiveInChanges": true,
+  "changedPaths": [
+    "DESIGN.md",
+    "README.md",
+    "VALIDATION.md",
+    "dist/assets/ccip-4Fl7be-5.js",
+    "dist/assets/dist-B0Hy7gdw.js",
+    "dist/assets/index-BkvDYD4S.js",
+    "dist/assets/index-DqDd8N_L.css",
+    "dist/index.html",
+    "web/src/Community.tsx",
+    "web/src/CreateJoin.tsx",
+    "web/src/MyGuild.tsx",
+    "web/src/Rankings.tsx",
+    "web/src/Rules.tsx",
+    "web/src/War.tsx",
+    "web/src/art.tsx",
+    "web/src/components.tsx",
+    "web/src/model.ts",
+    "web/src/styles.css",
+    "web/tests/browser.mjs",
+    "web/tests/display.mjs",
+    "web/tests/live.mjs",
+    "web/tests/model.test.ts",
+    "web/verification/display/browser-status.json",
+    "web/verification/display/build.txt",
+    "web/verification/display/bundle-audit.json",
+    "web/verification/display/dom-results.json",
+    "web/verification/display/live-state.json",
+    "web/verification/display/typecheck.txt",
+    "web/verification/display/unit-tests.txt"
+  ],
+  "budgetMethod": "Full size of added/modified files, conservatively including this audit; deletions add zero. Scratch and provided inputs excluded.",
+  "submissionAddedOrModifiedBytes": 1107641,
+  "withinBudget": true,
+  "diffWhitespaceCheck": "passed",
+  "currentProbeAttempt": "Final production export: browser startup failed; no measurements",
+  "relativeJsChunks": [
+    "dist/assets/ccip-4Fl7be-5.js",
+    "dist/assets/dist-B0Hy7gdw.js",
+    "dist/assets/index-BkvDYD4S.js"
+  ],
+  "liveRuntimeMatchesFingerprint": true
+}

@@ -11,11 +11,22 @@ import {
   WalletAddress,
 } from "./components";
 import { Icon } from "./icons";
-import { TIER_FLOORS, TIERS, liveStreak, lower, score, utcDay } from "./model";
+import {
+  TIER_FLOORS,
+  TIERS,
+  guildLabel,
+  liveStreak,
+  lower,
+  score,
+  utcDay,
+} from "./model";
 import { useGame } from "./store";
 import { useTransaction } from "./Transactions";
 import { inviteCode } from "./CreateJoin";
 import { keccak256, toHex } from "viem";
+
+const KICK_NOTICE =
+  "Removing a member also removes their points from this season's guild score. The member can join again with the invite code.";
 
 export function MyGuild({ guildId }: { guildId?: bigint }) {
   const game = useGame();
@@ -92,6 +103,12 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
   const members = game.people
     .filter((p) => p.guildId === guild.id)
     .sort((a, b) => b.points - a.points);
+  const removals = game.events
+    .filter(
+      (event) => event.name === "Kicked" && event.args.guildId === guild.id,
+    )
+    .slice(-5)
+    .reverse();
   const nextTier = Math.min(guild.tier + 1, 3);
   const floor = TIER_FLOORS[guild.tier];
   const next = TIER_FLOORS[nextTier];
@@ -114,10 +131,10 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
         <Hamster id={guild.id} name={guild.name} />
         <div className="guild-overview-copy">
           <TierBadge tier={guild.tier} />
-          <h2 className="guild-heading">{guild.name}</h2>
+          <h2 className="guild-heading">{guildLabel(guild)}</h2>
           <p className="muted">
-            Guild #{String(guild.id)} · {guild.memberCount} / {guild.seats}{" "}
-            seats · {guild.recruiting ? "Recruiting" : "Recruiting closed"}
+            {guild.memberCount} / {guild.seats} seats ·{" "}
+            {guild.recruiting ? "Recruiting" : "Recruiting closed"}
           </p>
           <div className="tier-progress-label">
             <span>{guild.tierPoints.toLocaleString()} tier points</span>
@@ -217,7 +234,7 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
                 name: "checkIn",
                 args: [],
                 title: "Check in for today?",
-                explanation: `Record your daily check-in for “${guild.name}”. The current simulation awards ${preview} season points. This updates your streak and guild average. Bonuses are determined by the contract at execution.`,
+                explanation: `Record your daily check-in for “${guildLabel(guild)}”. The current simulation awards ${preview} season points. This updates your streak and guild average. Bonuses are determined by the contract at execution.`,
               })
             }
           >
@@ -234,6 +251,7 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
         >
           The crew
         </SectionTitle>
+        {captain && <p className="fine muted">{KICK_NOTICE}</p>}
         <div className="card member-list">
           {members.length === 0 ? (
             <Empty
@@ -279,7 +297,7 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
                                 name: "kick",
                                 args: [member.address],
                                 title: "Remove this member?",
-                                explanation: `Remove ${member.address} from “${guild.name}”. Their current-season points leave with them. Removal does not give them a cool-down, so they can rejoin with a valid code.`,
+                                explanation: `Remove ${member.address} from “${guildLabel(guild)}”. ${KICK_NOTICE}`,
                               })
                             }
                           >
@@ -293,7 +311,7 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
                                 name: "transferCaptain",
                                 args: [member.address],
                                 title: "Transfer captain?",
-                                explanation: `Make ${member.address} the captain of “${guild.name}”. You give up all captain tools. They can manage recruiting, the invite code, and members.`,
+                                explanation: `Make ${member.address} the captain of “${guildLabel(guild)}”. You give up all captain tools. They can manage recruiting, the invite code, and members.`,
                               })
                             }
                           >
@@ -328,6 +346,42 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
           Staker badges show the bonus recorded at the last check-in, not a
           current staking balance. Streaks are consecutive UTC days.
         </p>
+      </section>
+      <section className="recent-changes">
+        <SectionTitle>Recent changes</SectionTitle>
+        {removals.length ? (
+          <ul className="recent-changes-list">
+            {removals.map((event) => {
+              const timestamp = event.args._timestamp as number | undefined;
+              const date =
+                timestamp === undefined
+                  ? undefined
+                  : new Date(timestamp * 1000);
+              return (
+                <li key={`${event.tx}:${event.index}`}>
+                  <div>
+                    <span className="fine muted">Removed</span>{" "}
+                    <WalletAddress address={String(event.args.wallet)} />
+                  </div>
+                  {date ? (
+                    <time className="fine muted" dateTime={date.toISOString()}>
+                      {date
+                        .toISOString()
+                        .replace("T", " ")
+                        .replace(".000Z", " UTC")}
+                    </time>
+                  ) : (
+                    <span className="fine muted">Block time unavailable</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="fine muted">
+            No member removals recorded for this guild.
+          </p>
+        )}
       </section>
       {mine && (
         <section className="guild-tools">
@@ -402,7 +456,7 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
                       name: "claimCaptain",
                       args: [],
                       title: "Claim the captain role?",
-                      explanation: `Become captain of “${guild.name}” because its captain has been inactive for 14 days. You receive all captain tools.`,
+                      explanation: `Become captain of “${guildLabel(guild)}” because its captain has been inactive for 14 days. You receive all captain tools.`,
                     })
                   }
                 >
@@ -427,7 +481,7 @@ export function MyGuild({ guildId }: { guildId?: bigint }) {
                     name: "leave",
                     args: [],
                     title: "Leave this guild?",
-                    explanation: `Leave “${guild.name}” and remove your current-season points from its score. A 24-hour cool-down prevents you from joining or creating a guild. ${guild.memberCount === 1 ? "As the last member, leaving will close this guild." : ""}`,
+                    explanation: `Leave “${guildLabel(guild)}” and remove your current-season points from its score. A 24-hour cool-down prevents you from joining or creating a guild. ${guild.memberCount === 1 ? "As the last member, leaving will close this guild." : ""}`,
                   })
                 }
               >

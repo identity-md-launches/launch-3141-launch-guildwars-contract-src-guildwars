@@ -1,0 +1,31 @@
+{
+  "capturedAt": "2026-11-09T10:34:47.634Z",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "contract": "0x4d9c2fa10fb70100d4c2390212b8f8de286a1d30",
+  "chainId": 11155111,
+  "block": 12096958,
+  "timestamp": 1794220476,
+  "runtimeHash": "0xb36deb856be191f1c2c3cb222c7d580cd0c9831bbb9384e4dfe4511c6f29c7a1",
+  "guildCount": "1",
+  "season": "2967",
+  "guilds": [
+    {
+      "id": "1",
+      "guild": [
+        "0x0c0E611A29b339D8c1048F2Edf9d4160A5fb8F22",
+        "Golden Squeek",
+        10,
+        true,
+        1,
+        0,
+        0,
+        20766
+      ],
+      "seasonScore": [
+        "20",
+        1,
+        "20000000"
+      ]
+    }
+  ]
+}

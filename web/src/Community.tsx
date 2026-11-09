@@ -15,6 +15,7 @@ import {
 import { Icon } from "./icons";
 import {
   TIERS,
+  guildLabel,
   liveStreak,
   lower,
   podiums,
@@ -233,7 +234,9 @@ export function Trophies() {
                     >
                       <Trophy place={index + 1} />
                       <span className="label">Place {index + 1}</span>
-                      <h3>{guild?.name ?? `Guild #${entry.id}`}</h3>
+                      <h3>
+                        {guild ? guildLabel(guild) : `Guild #${entry.id}`}
+                      </h3>
                       <p>{score(entry.score)} points / member</p>
                       <a className="text-link" href={`#guild/${entry.id}`}>
                         View guild
@@ -402,7 +405,7 @@ export function Profile({ wallet }: { wallet: string }) {
                   <>
                     Guild:{" "}
                     <a className="text-link" href={`#guild/${guild.id}`}>
-                      {guild.name}
+                      {guildLabel(guild)}
                     </a>
                   </>
                 ) : (

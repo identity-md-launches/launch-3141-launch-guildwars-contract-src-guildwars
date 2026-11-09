@@ -55,6 +55,37 @@ export type Replay = {
   guildIds: Set<bigint>;
 };
 export const lower = (a: string) => a.toLowerCase();
+export const guildLabel = (guild: Pick<Guild, "id" | "name">) =>
+  `${guild.name} #${guild.id}`;
+export const normalizeGuildName = (name: string) =>
+  name.trim().replace(/\s+/g, " ").toLowerCase();
+export function matchingGuildIds(events: GameEvent[], name: string) {
+  const normalized = normalizeGuildName(name);
+  if (!normalized) return [];
+  return events
+    .filter(
+      (event) =>
+        event.name === "GuildCreated" &&
+        typeof event.args.name === "string" &&
+        normalizeGuildName(event.args.name) === normalized,
+    )
+    .map((event) => event.args.guildId as bigint);
+}
+export function seasonDepartures(
+  events: GameEvent[],
+  guildId: bigint,
+  season: bigint,
+) {
+  return events.filter((event) => {
+    const timestamp = event.args._timestamp;
+    return (
+      (event.name === "Left" || event.name === "Kicked") &&
+      event.args.guildId === guildId &&
+      typeof timestamp === "number" &&
+      seasonAt(timestamp) === season
+    );
+  }).length;
+}
 export const short = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 export const score = (value: bigint) =>
   (Number(value) / 1e6).toLocaleString("en-US", { maximumFractionDigits: 3 });

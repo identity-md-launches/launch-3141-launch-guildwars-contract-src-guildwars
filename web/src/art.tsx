@@ -1,5 +1,5 @@
 import { keccak256, toHex } from "viem";
-import type { Guild } from "./model";
+import { guildLabel, type Guild } from "./model";
 
 const PALETTES = [
   ["#c8a479", "#edd9ba", "#876445"],
@@ -69,7 +69,11 @@ export function Hamster({
       viewBox="0 0 176 176"
       role={decorative ? undefined : "img"}
       aria-hidden={decorative || undefined}
-      aria-label={decorative ? undefined : `${name} hamster`}
+      aria-label={
+        decorative
+          ? undefined
+          : `${name}${typeof id === "bigint" ? ` #${id}` : ""} hamster`
+      }
       dangerouslySetInnerHTML={{ __html: hamsterMarkup(id, name) }}
     />
   );
@@ -184,17 +188,19 @@ export function shareCard(
   season: bigint,
   settled: boolean,
 ) {
+  const nameA = guildLabel(a);
+  const nameB = guildLabel(b);
   const text = settled
-    ? shareText(a.name, b.name, scoreA, scoreB)
-    : `${a.name} vs ${b.name} · Unsettled comparison`;
+    ? shareText(nameA, nameB, scoreA, scoreB)
+    : `${nameA} vs ${nameB} · Unsettled comparison`;
   const [winner, loser, high, low] =
     scoreA > scoreB
-      ? [a.name, b.name, scoreA, scoreB]
-      : [b.name, a.name, scoreB, scoreA];
+      ? [nameA, nameB, scoreA, scoreB]
+      : [nameB, nameA, scoreB, scoreA];
   const line1 = !settled
-    ? `${a.name} vs ${b.name}`
+    ? `${nameA} vs ${nameB}`
     : scoreA === scoreB
-      ? `${a.name} tied ${b.name}`
+      ? `${nameA} tied ${nameB}`
       : `${winner} beat ${loser}`;
   const line2 = !settled
     ? "Unsettled comparison"
